@@ -1,5 +1,6 @@
 #pragma once
- 
+#include "Encabezados.h"
+
 template<class T>
 class Nodo
 {
@@ -9,15 +10,23 @@ public:
 
 	//Contructor sin parametros
 
-	Nodo() {
-		dato = 0;
-		siguiente = nullptr;
-	}
+	Nodo();
 
 	//Constructor con parametros
-	Nodo(T v, Nodo<T> *sig = NULL){
-		dato = v;
-		siguiente = sig;
-	}
+	Nodo(T v, Nodo<T>* sig = nullptr);
 
 };
+
+template<class T>
+inline Nodo<T>::Nodo()
+{
+	dato = 0;
+	siguiente = nullptrptr;
+}
+
+template<class T>
+inline Nodo<T>::Nodo(T v, Nodo<T>* sig = nullptr)
+{
+	dato = v;
+	siguiente = sig;
+}

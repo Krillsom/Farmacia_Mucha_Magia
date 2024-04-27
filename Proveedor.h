@@ -1,22 +1,55 @@
 #pragma once
+#include "Cola.h"
+#define MAX 45
+#define MIN 5
 
 template <class T>
-class Proveedor
+class Proveedor: public Cola<T>
 {
+private:
+	int pos;
+
 public:
 	Proveedor();
 	~Proveedor();
 
-private:
+	void recibirPedido(string nombre, int cantidad);
+	void enviarPedido();
+	void guardarPedidos();
+	float generarPrecio(int cantidad);
 
 };
 
-template <class T>
-Proveedor<T>::Proveedor()
+template<class T>
+inline Proveedor<T>::Proveedor(): Cola<T>()
 {
 }
 
 template <class T>
 Proveedor<T>::~Proveedor()
 {
+}
+
+template<class T>
+inline void Proveedor<T>::recibirPedido(string nombre, int cantidad)
+{
+	float precio = generarPrecio(cantidad);
+	int length = size();
+
+	Medicamento<string, int, float>* medicamento = new Medicamento<string, int, float>(nombre, cantidad, precio, length);
+
+	enqueue(*medicamento);
+}
+
+template<class T>
+inline void Proveedor<T>::enviarPedido()
+{	
+	T primerPedido = peek();
+}
+
+template<class T>
+inline float Proveedor<T>::generarPrecio(int cantidad)
+{
+	float precio = ((float(rand()) / float(RAND_MAX)) * (MAX - MIN + 1) + MIN) * float(cantidad);
+	return precio;
 }
