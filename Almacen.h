@@ -18,6 +18,9 @@ public:
 	void elegirOpcion();
 	void mostrarBotones();
 	void agregarInicioLista(T obj);
+
+	void Almacen_menu();
+
 	T getElementoLista(int n);
 	void mostrarOpcion(string* message, int x, bool activado = false);
 };
@@ -26,6 +29,48 @@ template<class T>
 inline void Almacen<T>::agregarInicioLista(T obj)
 {
 	unalista.agregaInicial(obj);
+}
+
+template<class T>
+inline void Almacen<T>::Almacen_menu()
+{
+
+	Console::Clear();
+	string indicador = "<=";
+	gotoxy(45, 3); cout << R"(    ___    __                              )";
+	gotoxy(45, 4); cout << R"(   /   |  / /___ ___  ____ _________  ____ )";
+	gotoxy(45, 5); cout << R"(  / /| | / / __ `__ \/ __ `/ ___/ _ \/ __ \)";
+	gotoxy(45, 6); cout << R"( / ___ |/ / / / / / / /_/ / /__/  __/ / / /)";
+	gotoxy(45, 7); cout << R"(/_/  |_/_/_/ /_/ /_/\__,_/\___/\___/_/ /_/ )";
+	gotoxy(45, 8); cout << R"(-------------------------------------------)";
+
+	gotoxy(50, 10); cout << R"(Lista de Pedidos Pendientes)";
+	gotoxy(50, 12); cout << R"(Realizar Pedidos)";
+	gotoxy(50, 14); cout << R"(Recibir Pedido)";
+	gotoxy(50, 16); cout << R"(Inventario)";
+	gotoxy(50, 18); cout << R"(Volver al Menu)";
+
+	short opcion = logica_menu(10, 5, 45, 10);
+
+	if (opcion == 1) {
+		//Caja_menu();   //mostrar el menu de caja
+		mostrarPedidos();
+		Console::Clear();
+	}
+	if (opcion == 2) {
+		//almacen_menu();    //mostrar el menu de almacen
+		Console::Clear();
+	}
+	if (opcion == 3) {
+		//pantalla_integrantes();
+		Console::Clear();
+	}
+	if (opcion == 4) {
+	}
+
+	if (opcion == 5) {
+		Console::Clear();
+	}
 }
 
 template<class T>
