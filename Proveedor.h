@@ -13,8 +13,8 @@ public:
 	Proveedor();
 	~Proveedor();
 
-	void recibirPedido(string nombre, int cantidad);
-	void enviarPedido();
+	void agregarPedido(string nombre, int cantidad);
+	T recibirPedido();
 	void guardarPedidos();
 	float generarPrecio(int cantidad);
 
@@ -31,7 +31,7 @@ Proveedor<T>::~Proveedor()
 }
 
 template<class T>
-inline void Proveedor<T>::recibirPedido(string nombre, int cantidad)
+inline void Proveedor<T>::agregarPedido(string nombre, int cantidad)
 {
 	float precio = generarPrecio(cantidad);
 	int length = size();
@@ -41,10 +41,14 @@ inline void Proveedor<T>::recibirPedido(string nombre, int cantidad)
 	enqueue(*medicamento);
 }
 
+
 template<class T>
-inline void Proveedor<T>::enviarPedido()
+inline T Proveedor<T>::recibirPedido()
 {	
 	T primerPedido = peek();
+	dequeue();
+
+	return primerPedido;
 }
 
 template<class T>
