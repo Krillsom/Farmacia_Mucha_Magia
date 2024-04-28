@@ -61,7 +61,6 @@ inline void Tienda::menu()
 	if (opcion == 1) {
 		//Caja_menu();   //mostrar el menu de caja
 		objCaja->menu_caja();
-		Console::Clear();
 		menu();
 	}
 	if (opcion == 2) {
@@ -78,5 +77,4 @@ inline void Tienda::menu()
 	if (opcion == 4) {
 		exit(0);
 	}
-
 }

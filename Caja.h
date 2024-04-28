@@ -32,6 +32,7 @@ Caja<T>::~Caja()
 
 template<class T>
 void Caja<T>::registrarVenta(string nombreMedicamento, int cantidadVenta) {
+
 	gotoxy(getXCenter(86), Console::WindowTop + 1); cout << R"( 	____  _______________________________  ___    ____     _    _________   ___________ )";
 	gotoxy(getXCenter(86), Console::WindowTop + 2); cout << R"(   / __ \/ ____/ ____/  _/ ___/_  __/ __ \/   |  / __ \   | |  / / ____/ | / /_  __/   |)";
 	gotoxy(getXCenter(86), Console::WindowTop + 3); cout << R"(  / /_/ / __/ / / __ / / \__ \ / / / /_/ / /| | / /_/ /   | | / / __/ /  |/ / / / / /| |)";
@@ -90,6 +91,8 @@ void Caja<T>::mostrarHistorialVentas(){
 template<class T>
 inline void Caja<T>::menu_caja()
 {
+	Console::Clear();
+
 	gotoxy(getXCenter(24), Console::WindowTop + 1); cout << R"(   ______        _      )";
 	gotoxy(getXCenter(24), Console::WindowTop + 2); cout << R"(  / ____/___ _  (_)___ _)";
 	gotoxy(getXCenter(24), Console::WindowTop + 3); cout << R"( / /   / __ `/ / / __ `/)";

@@ -8,7 +8,7 @@ template<class T>
 class Pila
 {
 public:
-	Pila() { tope = nullptr; };
+	Pila() { tope = nullptr;};
 	void push(T v);
 	T pop();
 	bool estaVacia();

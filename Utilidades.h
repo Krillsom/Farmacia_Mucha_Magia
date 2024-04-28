@@ -27,18 +27,18 @@ inline T getYCenter(T lengthY) {
 
 
 inline void mostrar_creditos() {
-	gotoxy(45, 2); cout << "+-+-+-+-+-+-+-+-+";
-	gotoxy(45, 3); cout << "|C|R|E|D|I|T|O|S|";
-	gotoxy(45, 4); cout << "+-+-+-+-+-+-+-+-+";
-	gotoxy(10, 6); cout << "Integrantes:             Carrera:                       Secci" << char(162) << "n:";
-	gotoxy(10, 7); cout << "- Kevin Chi              Ingenier" << char(161) << "a de Software         SX34";
-	gotoxy(10, 8); cout << "- Gael Rivera";
-	gotoxy(10, 9); cout << "- Alejandro Oroncoy";
+	Console::Clear();
+	gotoxy(getXCenter(17), 2); cout << "+-+-+-+-+-+-+-+-+";
+	gotoxy(getXCenter(17), 3); cout << "|C|R|E|D|I|T|O|S|";
+	gotoxy(getXCenter(17), 4); cout << "+-+-+-+-+-+-+-+-+";
+	gotoxy(getXCenter(74), 6); cout << "Integrantes:             Carrera:                       Secci" << char(162) << "n:";
+	gotoxy(getXCenter(74), 7); cout << "- Kevin Chi              Ingenier" << char(161) << "a de Software         SX34";
+	gotoxy(getXCenter(74), 8); cout << "- Gael Rivera            Curso:";
+	gotoxy(getXCenter(74), 9); cout << "- Alejandro Oroncoy      Algoritmos y estructura de datos\n\n";
 
-	cin.get();
-	cin.ignore();
-
+	system("pause");
 }
+
 
 
 inline short logica_menu(int pos_y_inicial, int cantidad_opciones, int x, int y) {

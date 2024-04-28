@@ -25,7 +25,7 @@ public:
 
 	T getElementoLista(int n);
 
-	void mostrarOpcion(string* message, int x, bool activado = false, bool desactivado = false);
+	void mostrarOpcion(string* message, int x, bool seleccionado = false, bool desactivado = false);
 
 	Lista_Medicamentos<T> getUnaLista();
 };
@@ -131,12 +131,9 @@ inline void Almacen<T>::mostrarPedidos()
 
 		proveedor->forEach([pos](T t, bool esInicio) mutable {
 			t.mostrar(9, esInicio, ++ * pos);
-			});
+		});
 	}
-
-
 	mostrarBotones(!proveedor->size());
-
 	elegirOpcion(!proveedor->size());
 }
 
