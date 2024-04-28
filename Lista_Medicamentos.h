@@ -123,3 +123,5 @@ inline int Lista_Medicamentos<T>::get_lon()
 {
 	return this->lon;
 }
+
+

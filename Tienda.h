@@ -10,6 +10,7 @@ class Tienda
 private:
 	Almacen<Medicamento<string, int, float>>* objAlmacen;
 	Caja<Medicamento<string, int, float>>* objCaja;
+	
 
 public:
 	Tienda();
@@ -60,6 +61,7 @@ inline void Tienda::menu()
 
 	if (opcion == 1) {
 		//Caja_menu();   //mostrar el menu de caja
+		objCaja->actualizar_lista(objAlmacen->getUnaLista());
 		objCaja->menu_caja();
 		menu();
 	}

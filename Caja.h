@@ -11,9 +11,10 @@ public:
 	Caja(Lista_Medicamentos<T> unalista);
 	~Caja();
 
-	void registrarVenta(string nombreMedicamento, int cantidadVenta);
+	void registrarVenta();
 	void mostrarHistorialVentas();
 	void menu_caja();
+	void actualizar_lista(Lista_Medicamentos<T> unalista);
 
 private:
 	Lista_Medicamentos<T> unalista;
@@ -31,9 +32,15 @@ Caja<T>::~Caja()
 }
 
 template<class T>
-void Caja<T>::registrarVenta(string nombreMedicamento, int cantidadVenta) {
+inline void Caja<T>::actualizar_lista(Lista_Medicamentos<T> unalista)
+{
+	this->unalista = unalista;
+}
 
-	gotoxy(getXCenter(86), Console::WindowTop + 1); cout << R"( 	____  _______________________________  ___    ____     _    _________   ___________ )";
+template<class T>
+void Caja<T>::registrarVenta() {
+
+	gotoxy(getXCenter(86), Console::WindowTop + 1); cout << R"(    ____  _______________________________  ___    ____     _    _________   ___________ )";
 	gotoxy(getXCenter(86), Console::WindowTop + 2); cout << R"(   / __ \/ ____/ ____/  _/ ___/_  __/ __ \/   |  / __ \   | |  / / ____/ | / /_  __/   |)";
 	gotoxy(getXCenter(86), Console::WindowTop + 3); cout << R"(  / /_/ / __/ / / __ / / \__ \ / / / /_/ / /| | / /_/ /   | | / / __/ /  |/ / / / / /| |)";
 	gotoxy(getXCenter(86), Console::WindowTop + 4); cout << R"( / _, _/ /___/ /_/ // / ___/ // / / _, _/ ___ |/ _, _/    | |/ / /___/ /|  / / / / ___ |)";
@@ -41,6 +48,14 @@ void Caja<T>::registrarVenta(string nombreMedicamento, int cantidadVenta) {
 	
 	bool medicamentoEnInventario = false;
 	int cantidadDisponible = 0;
+	string nombreMedicamento;
+	int cantidadVenta;
+
+	unalista.coutLista();
+	gotoxy(3, 20);
+	cout << "Ingrese el nombre del medicamento: "; cin >> nombreMedicamento;
+	gotoxy(3, 23);
+	cout << "Ingrese la cantidad: "; cin >> cantidadVenta;
 
 	Medicamento<string, int, float> venta;
 
@@ -67,7 +82,8 @@ void Caja<T>::registrarVenta(string nombreMedicamento, int cantidadVenta) {
 	}
 	else {
 		cout << "Error: No hay suficientes unidades de '" << nombreMedicamento << "' en el inventario." << endl;
-	}                                                                                       
+	}                                               
+	system("pause");
 }
 
 template<class T>
@@ -83,9 +99,11 @@ void Caja<T>::mostrarHistorialVentas(){
 	Pila<T> copiaHistorial = historialVentas;
 	while (!copiaHistorial.estaVacia()) {
 
+		
 		T dato = copiaHistorial.pop();
 	}
-
+	gotoxy(getXCenter(10), 45);
+	system("pause");
 }
 
 template<class T>
@@ -101,7 +119,7 @@ inline void Caja<T>::menu_caja()
 	gotoxy(getXCenter(24), Console::WindowTop + 6); cout << R"(          /___/         )";
 	gotoxy(getXCenter(24), Console::WindowTop + 7); cout << R"(------------------------)";
 
-	gotoxy(55, 9); cout << R"(Venta)";
+	gotoxy(55, 9);  cout << R"(Venta)";
 	gotoxy(55, 11); cout << R"(Historial)";
 	gotoxy(55, 13); cout << R"(Volver al Menu)";
 
@@ -109,7 +127,7 @@ inline void Caja<T>::menu_caja()
 
 	if (opcion == 1) {
 		Console::Clear();
-		//registrarVenta();
+		registrarVenta();
 		menu_caja();
 	}
 	if (opcion == 2) {
@@ -122,3 +140,5 @@ inline void Caja<T>::menu_caja()
 		Console::Clear();
 	}
 }
+
+

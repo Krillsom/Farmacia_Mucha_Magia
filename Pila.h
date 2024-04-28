@@ -12,7 +12,6 @@ public:
 	void push(T v);
 	T pop();
 	bool estaVacia();
-
 private:
 	Nodo<T>* tope;
 };
@@ -38,6 +37,8 @@ T Pila<T>::pop()
 		return elemento;
 	}
 }
+
+
 
 template<class T>
 bool Pila<T>::estaVacia()
