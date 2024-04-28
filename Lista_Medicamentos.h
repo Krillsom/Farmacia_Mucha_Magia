@@ -96,6 +96,12 @@ inline void Lista_Medicamentos<T>::eliminarPos(int pos)
 template<class T>
 inline void Lista_Medicamentos<T>::coutLista()
 {
+	Nodo* aux = ini;
+	while (aux != nullptr) {
+		std::cout << aux->medicina.getNombre() << std::endl;
+		aux = aux->sig;
+	}
+
 }
 
 template<class T>

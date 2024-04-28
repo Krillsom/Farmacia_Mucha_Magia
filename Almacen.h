@@ -18,6 +18,7 @@ public:
 	void elegirOpcion(bool pedirPedidoDesabilitado);
 	void mostrarBotones(bool pedirPedidoDesabilitado);
 	void agregarInicioLista(T obj);
+	void mostrarInventario();
 
 	void Almacen_menu();
 
@@ -37,12 +38,12 @@ inline void Almacen<T>::Almacen_menu()
 
 	Console::Clear();
 	string indicador = "<=";
-	gotoxy(45, 3); cout << R"(    ___    __                              )";
-	gotoxy(45, 4); cout << R"(   /   |  / /___ ___  ____ _________  ____ )";
-	gotoxy(45, 5); cout << R"(  / /| | / / __ `__ \/ __ `/ ___/ _ \/ __ \)";
-	gotoxy(45, 6); cout << R"( / ___ |/ / / / / / / /_/ / /__/  __/ / / /)";
-	gotoxy(45, 7); cout << R"(/_/  |_/_/_/ /_/ /_/\__,_/\___/\___/_/ /_/ )";
-	gotoxy(45, 8); cout << R"(-------------------------------------------)";
+	gotoxy(getXCenter(44), 3); cout << R"(    ___    __                              )";
+	gotoxy(getXCenter(44), 4); cout << R"(   /   |  / /___ ___  ____ _________  ____ )";
+	gotoxy(getXCenter(44), 5); cout << R"(  / /| | / / __ `__ \/ __ `/ ___/ _ \/ __ \)";
+	gotoxy(getXCenter(44), 6); cout << R"( / ___ |/ / / / / / / /_/ / /__/  __/ / / /)";
+	gotoxy(getXCenter(44), 7); cout << R"(/_/  |_/_/_/ /_/ /_/\__,_/\___/\___/_/ /_/ )";
+	gotoxy(getXCenter(44), 8); cout << R"(-------------------------------------------)";
 
 	gotoxy(50, 10); cout << R"(Lista de Pedidos Pendientes)";
 	gotoxy(50, 12); cout << R"(Realizar Pedidos)";
@@ -62,10 +63,13 @@ inline void Almacen<T>::Almacen_menu()
 		//almacen_menu();    //mostrar el menu de almacen
 		Console::Clear();
 	}
-	if (opcion == 4) {
+	if (opcion == 3) {
+		mostrarInventario();
+
+		Console::Clear();
 	}
 
-	if (opcion == 5) {
+	if (opcion == 4) {
 		Console::Clear();
 	}
 }
@@ -230,4 +234,18 @@ inline void Almacen<T>::mostrarOpcion(string* message, int x, bool activado = fa
 	cout << char(188);
 
 	if (activado || desactivado) color(ConsoleColor::White);
+}
+
+
+template<class T>
+inline void Almacen<T>::mostrarInventario()
+{
+	Console::Clear();
+
+	unalista.coutLista();
+
+	mostrarOpcion(new string("Volver al men" + string(1, 163)), getXCenter(18), true);
+
+	elegirOpcion(true);
+	
 }
