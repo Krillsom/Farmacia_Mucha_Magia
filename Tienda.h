@@ -5,25 +5,22 @@
 #include "Encabezados.h"
 
 
-using namespace System;
-
 class Tienda
 {
+private:
+	Almacen<Medicamento<string, int, float>>* objAlmacen;
+	Caja<Medicamento<string, int, float>>* objCaja;
+
 public:
 	Tienda();
 	~Tienda();
 	void menu();
-private:
-
-
-	Almacen<Medicamento<string, int, float>>* objAlmacen;
-	Caja<Medicamento<string, int, float>>* objcaja;
 };
 
 Tienda::Tienda()
 {
-	objAlmacen = new Almacen<Medicamento<string, int, float>>(); 
-	objcaja	= new Caja<Medicamento<string, int, float>>(objAlmacen->getLista());
+	objAlmacen = new Almacen<Medicamento<string, int, float>>();
+	objCaja = new Caja<Medicamento<string, int, float>>(objAlmacen->getUnaLista());
 }
 
 Tienda::~Tienda()
@@ -34,14 +31,13 @@ Tienda::~Tienda()
 inline void Tienda::menu()
 {
 	Console::Clear();
-	Console::SetWindowSize(130, 50);
-	string indicador = "=>";
-	gotoxy(3, 3); cout <<  R"(    ______                                _                   __  ___           __             __  ___            _          )";
-	gotoxy(3, 4); cout <<  R"(   / ____/___ __________ ___  ____ ______(_)___ _     __     /  |/  /_  _______/ /_  ____ _   /  |/  /___ _____ _(_)___ _    )";
-	gotoxy(3, 5); cout <<  R"(  / /_  / __ `/ ___/ __ `__ \/ __ `/ ___/ / __ `/  __/ /_   / /|_/ / / / / ___/ __ \/ __ `/  / /|_/ / __ `/ __ `/ / __ `/    )";
-	gotoxy(3, 6); cout <<  R"( / __/ / /_/ / /  / / / / / / /_/ / /__/ / /_/ /  /_  __/  / /  / / /_/ / /__/ / / / /_/ /  / /  / / /_/ / /_/ / / /_/ /     )";
-	gotoxy(3, 7); cout << R"(/_/    \__,_/_/  /_/ /_/ /_/\__,_/\___/_/\__,_/    /_/    /_/  /_/\__,_/\___/_/ /_/\__,_/  /_/  /_/\__,_/\__, /_/\__,_/      )";
-	gotoxy(3, 8); cout <<  R"(                                                                                                        /____/               )";
+	string indicador = "<=";
+	gotoxy(3, 3); cout <<  R"(    ______                                _                   __  ___           __             __  ___            _      )";
+	gotoxy(3, 4); cout <<  R"(   / ____/___ __________ ___  ____ ______(_)___ _     __     /  |/  /_  _______/ /_  ____ _   /  |/  /___ _____ _(_)___ _)";
+	gotoxy(3, 5); cout <<  R"(  / /_  / __ `/ ___/ __ `__ \/ __ `/ ___/ / __ `/  __/ /_   / /|_/ / / / / ___/ __ \/ __ `/  / /|_/ / __ `/ __ `/ / __ `/)";
+	gotoxy(3, 6); cout <<  R"( / __/ / /_/ / /  / / / / / / /_/ / /__/ / /_/ /  /_  __/  / /  / / /_/ / /__/ / / / /_/ /  / /  / / /_/ / /_/ / / /_/ /)";
+	gotoxy(3, 7); cout << R"(/_/    \__,_/_/  /_/ /_/ /_/\__,_/\___/_/\__,_/    /_/    /_/  /_/\__,_/\___/_/ /_/\__,_/  /_/  /_/\__,_/\__, /_/\__,_/ )";
+	gotoxy(3, 8); cout <<  R"(                                                                                                        /____/)";
 	gotoxy(3, 9); cout << R"(-----------------------------------------------------------------------------------------------------------------------------)";
 
 	gotoxy(55, 12); cout << R"(Caja)";

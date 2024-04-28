@@ -34,9 +34,8 @@ template<class T>
 inline void Proveedor<T>::agregarPedido(string nombre, int cantidad)
 {
 	float precio = generarPrecio(cantidad);
-	int length = size();
 
-	Medicamento<string, int, float>* medicamento = new Medicamento<string, int, float>(nombre, cantidad, precio, length);
+	Medicamento<string, int, float>* medicamento = new Medicamento<string, int, float>(nombre, cantidad, precio);
 
 	enqueue(*medicamento);
 }
@@ -45,7 +44,7 @@ inline void Proveedor<T>::agregarPedido(string nombre, int cantidad)
 template<class T>
 inline T Proveedor<T>::recibirPedido()
 {	
-	T primerPedido = peek();
+	T primerPedido = peek().dato;
 	dequeue();
 
 	return primerPedido;

@@ -8,7 +8,6 @@ template <class T>
 class Caja
 {
 public:
-	Caja();
 	Caja(Lista_Medicamentos<T> unalista);
 	~Caja();
 
@@ -22,7 +21,7 @@ private:
 
 template <class T>
 Caja<T>::Caja(Lista_Medicamentos<T> unalista){
-	this->unalista, unalista;
+	this->unalista = unalista;
 }
 
 template <class T>

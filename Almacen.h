@@ -14,20 +14,18 @@ public:
 	~Almacen();
 
 	void registrarPedido();
-
-	void mostrarBotones();
+	void mostrarPedidos();
+	void elegirOpcion(bool pedirPedidoDesabilitado);
+	void mostrarBotones(bool pedirPedidoDesabilitado);
 	void agregarInicioLista(T obj);
-
-	void mostrar_inventario();
+	void mostrarInventario();
+	void guardarInventario();
 	void Almacen_menu();
 
-	Lista_Medicamentos<T> getLista();
-
 	T getElementoLista(int n);
+	void mostrarOpcion(string* message, int x, bool activado = false, bool desactivado = false);
 
-	void mostrarPedidos();
-	void elegirOpcion();
-	void mostrarOpcion(string* message, int x, bool activado = false);
+	Lista_Medicamentos<T> getUnaLista();
 };
 
 
@@ -45,19 +43,15 @@ Almacen<T>::~Almacen()
 
 
 template<class T>
-inline void Almacen<T>::agregarInicioLista(T obj)
-{
+inline Lista_Medicamentos<T> Almacen<T>::getUnaLista() {
+	return unalista;
+}
+
+template<class T>
+inline void Almacen<T>::agregarInicioLista(T obj) {
 	unalista.agregaInicial(obj);
 }
 
-//----------------------
-template<class T>
-inline void Almacen<T>::mostrar_inventario()
-{
-	unalista.forEach([](T t) {
-		t.mostrar(9);
-	});
-}
 //----------------------
 template<class T>
 inline void Almacen<T>::Almacen_menu()
@@ -65,17 +59,18 @@ inline void Almacen<T>::Almacen_menu()
 
 	Console::Clear();
 	string indicador = "<=";
-	gotoxy(45, 3); cout << R"(    ___    __                              )";
-	gotoxy(45, 4); cout << R"(   /   |  / /___ ___  ____ _________  ____ )";
-	gotoxy(45, 5); cout << R"(  / /| | / / __ `__ \/ __ `/ ___/ _ \/ __ \)";
-	gotoxy(45, 6); cout << R"( / ___ |/ / / / / / / /_/ / /__/  __/ / / /)";
-	gotoxy(45, 7); cout << R"(/_/  |_/_/_/ /_/ /_/\__,_/\___/\___/_/ /_/ )";
-	gotoxy(45, 8); cout << R"(-------------------------------------------)";
+	gotoxy(getXCenter(44), 3); cout << R"(    ___    __                              )";
+	gotoxy(getXCenter(44), 4); cout << R"(   /   |  / /___ ___  ____ _________  ____ )";
+	gotoxy(getXCenter(44), 5); cout << R"(  / /| | / / __ `__ \/ __ `/ ___/ _ \/ __ \)";
+	gotoxy(getXCenter(44), 6); cout << R"( / ___ |/ / / / / / / /_/ / /__/  __/ / / /)";
+	gotoxy(getXCenter(44), 7); cout << R"(/_/  |_/_/_/ /_/ /_/\__,_/\___/\___/_/ /_/ )";
+	gotoxy(getXCenter(44), 8); cout << R"(-------------------------------------------)";
 
 	gotoxy(50, 10); cout << R"(Lista de Pedidos Pendientes)";
 	gotoxy(50, 12); cout << R"(Realizar Pedidos)";
 	gotoxy(50, 14); cout << R"(Inventario)";
 	gotoxy(50, 16); cout << R"(Volver al Menu)";
+
 
 	short opcion = logica_menu(10, 4, 45, 10);
 
@@ -91,19 +86,12 @@ inline void Almacen<T>::Almacen_menu()
 		Almacen_menu();
 	}
 	if (opcion == 3) {
-		//pantalla_integrantes();
+		mostrarInventario();
+
 		Console::Clear();
 	}
+
 	if (opcion == 4) {
-		Console::Clear();
-
-		mostrar_inventario();
-		cin.get();
-		cin.ignore();
-		Almacen_menu();
-
-	}
-	if (opcion == 5) {
 		Console::Clear();
 	}
 }
@@ -126,33 +114,47 @@ inline T Almacen<T>::getElementoLista(int n)
 template<class T>
 inline void Almacen<T>::mostrarPedidos()
 {
-	gotoxy(getXCenter(105), Console::WindowTop + 1); cout << R"(    ____  __________  ________  ____  _____    ____  _______   ______  ___________   ___________________)";
+	Console::Clear();
+
+	gotoxy(getXCenter(105), Console::WindowTop + 1);  cout << R"(    ____  __________  ________  ____  _____    ____  _______   ______  ___________   ___________________)";
 	gotoxy(getXCenter(105), Console::WindowTop + 2); cout << R"(   / __ \/ ____/ __ \/  _/ __ \/ __ \/ ___/   / __ \/ ____/ | / / __ \/  _/ ____/ | / /_  __/ ____/ ___/)";
 	gotoxy(getXCenter(105), Console::WindowTop + 3); cout << R"(  / /_/ / __/ / / / // // / / / / / /\__ \   / /_/ / __/ /  |/ / / / // // __/ /  |/ / / / / __/  \__ \)";
 	gotoxy(getXCenter(105), Console::WindowTop + 4); cout << R"( / ____/ /___/ /_/ // // /_/ / /_/ /___/ /  / ____/ /___/ /|  / /_/ // // /___/ /|  / / / / /___ ___/ /)";
 	gotoxy(getXCenter(105), Console::WindowTop + 5); cout << R"(/_/   /_____/_____/___/_____/\____//____/  /_/   /_____/_/ |_/_____/___/_____/_/ |_/ /_/ /_____//____/)";
 
+	if (!proveedor->size()) {
+		string mensaje = string("Por el momento, no cuenta con pedidos, si gusta agregar, hagalo en realizar pedido.");
 
-	proveedor->forEach([](T t) {
-		t.mostrar(9);
-	});
 
-	int base_buttons = 9 + proveedor->size() * 3;
+		gotoxy(getXCenter(mensaje.size()), getYCenter(1));
 
-	mostrarBotones();
+		cout << mensaje;
+	}
+	else {
 
-	elegirOpcion();
+		short* pos = new short(0);
+
+		proveedor->forEach([pos](T t, bool esInicio) mutable {
+			t.mostrar(9, esInicio, ++ * pos);
+			});
+	}
+
+
+	mostrarBotones(!proveedor->size());
+
+	elegirOpcion(!proveedor->size());
 }
 
 template<class T>
 inline void Almacen<T>::registrarPedido()
 {
+	Console::Clear();
 	string temp_Name = "";
 	int temp_cantidad = 0;
 
-	cout << "\n\nIngrese el nombre de la medicina: ";
+	gotoxy(getXCenter(35), getYCenter(5));  cout << "Ingrese el nombre de la medicina: ";
 	cin >> temp_Name;
-	cout << "\n\nIngrese la cantidad a pedir: ";
+	gotoxy(getXCenter(30), getYCenter(5) + 2);  cout << "Ingrese la cantidad a pedir: ";
 	cin >> temp_cantidad;
 
 	proveedor->agregarPedido(temp_Name, temp_cantidad);
@@ -165,46 +167,60 @@ inline void Almacen<T>::registrarPedido()
 //------------------
 
 template<class T>
-inline void Almacen<T>::elegirOpcion()
+inline void Almacen<T>::elegirOpcion(bool pedirPedidoDesabilitado)
 {
 	int opcion = 0;
 
 	while (1) {
 		if (_kbhit()) {
 			char tecla = _getch();
-			if (tecla == 75) {
-				opcion--;
-				if (opcion < 0) opcion = 1;
-			}
-			else if (tecla == 77) {
-				opcion++;
-				if (opcion > 1) opcion = 0;
-			}
 
-			if (tecla == 75 || tecla == 77) {
-				mostrarOpcion(new string("Volver al men" + string(1, 163)),
-					getXCenter(37), opcion == 0);
 
-				mostrarOpcion(new string("Recibir pedido"),
-					getXCenter(37) + 19, opcion == 1);
+			if (!pedirPedidoDesabilitado) {
+				if (tecla == 75) {
+					opcion--;
+					if (opcion < 0) opcion = 1;
+				}
+				else if (tecla == 77) {
+					opcion++;
+					if (opcion > 1) opcion = 0;
+				}
+
+				if (tecla == 75 || tecla == 77) {
+					mostrarOpcion(new string("Volver al men" + string(1, 163)),
+						getXCenter(37), opcion == 0);
+
+					mostrarOpcion(new string("Recibir pedido"),
+						getXCenter(37) + 19, opcion == 1);
+				}
+
 			}
-
 			if (tecla == 13) break;
+
+
 		}
 	}
 
 	if (opcion == 0) {
 		// Volver al menu
+		Console::Clear();
+		Almacen_menu();
 	}
 	else if (opcion == 1) {
 		// Recibir el pedido
+		Console::Clear();
+		T pedido = proveedor->recibirPedido();
+		unalista.agregaInicial(pedido);
+		mostrarPedidos();
+
+		Console::Clear();
 	}
+
 }
 
 template<class T>
-inline void Almacen<T>::mostrarBotones()
+inline void Almacen<T>::mostrarBotones(bool pedirPedidoDesabilitado)
 {
-
 	int x = getXCenter(37);
 
 	string* message = new string("Volver al men" + string(1, 163));
@@ -213,33 +229,47 @@ inline void Almacen<T>::mostrarBotones()
 	x += message->length() + 5;
 
 	*message = "Recibir pedido";
-	mostrarOpcion(message, x);
+	mostrarOpcion(message, x, false, pedirPedidoDesabilitado);
 
 	delete message;
 }
 
 template<class T>
-inline void Almacen<T>::mostrarOpcion(string* message, int x, bool activado = false)
+inline void Almacen<T>::mostrarOpcion(string* message, int x, bool activado = false, bool desactivado = false)
 {
 	if (activado) color(ConsoleColor::Cyan);
+	else if (desactivado) color(ConsoleColor::DarkGray);
 	else color(ConsoleColor::White);
 
-	gotoxy<short>(x, Console::WindowHeight - 3);
+	gotoxy<short>(x, Console::WindowHeight - 4);
 
 	cout << char(201);
 	for (short i = 0; i < message->length() + 2; i++) cout << char(205);
 	cout << char(187);
 
-	gotoxy<short>(x, Console::WindowHeight - 2);
+	gotoxy<short>(x, Console::WindowHeight - 3);
 
 	cout << char(186) << " " << *message << " " << char(186);
 
-	gotoxy<short>(x, Console::WindowHeight - 1);
+	gotoxy<short>(x, Console::WindowHeight - 2);
 
 	cout << char(200);
 	for (short i = 0; i < message->length() + 2; i++) cout << char(205);
 	cout << char(188);
 
-	if (activado) color(ConsoleColor::White);
+	if (activado || desactivado) color(ConsoleColor::White);
+}
+
+
+template<class T>
+inline void Almacen<T>::mostrarInventario()
+{
+	Console::Clear();
+
+	unalista.coutLista();
+
+	mostrarOpcion(new string("Volver al men" + string(1, 163)), getXCenter(18), true);
+
+	elegirOpcion(true);
 
 }

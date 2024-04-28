@@ -1,38 +1,22 @@
 #include "string"
-#include "Almacen.h"
-#include "Medicamento.h"
-#include "Lista_Medicamentos.h"
-#include "Caja.h"
 #include "Tienda.h"
 
 
 using namespace std;
 
 int main() {
-	srand(time(nullptr));
-	
-	/*Almacen<Medicamento<string, int, float>>* almacen = new Almacen<Medicamento<string, int, float>>;
-	
-	almacen->registrarPedido();
-	
-	almacen->mostrarPedidos();
-	Farmacia farmacia;
-	farmacia.menu();*/
+    srand(time(nullptr));
 
-	//Lista_Medicamentos<Medicamento<string, int, float>>* lista = new Lista_Medicamentos<Medicamento<string,int,float>>;
+    //Almacen<Medicamento<string, int, float>>* almacen = new Almacen<Medicamento<string, int, float>>;
+    Tienda* objTienda = new Tienda();
 
-	//Caja<Medicamento<string,int,float>> caja(*lista);
+    objTienda->menu();
+    //almacen->mostrarPedidos();
+ 
 
-	string nombreMedicamento = "Paracetamol";
-	int cantidadVenta = 10;
+    delete objTienda;
 
-	//caja.registrarVenta(nombreMedicamento, cantidadVenta);
-	//Console::Clear;
-	//caja.mostrarHistorialVentas();
-	Tienda* objtienda = new Tienda();
-	objtienda->menu();
-
-	cin.get();
-	cin.ignore();
-	return 0;
+    cin.get();
+    cin.ignore();
+    return 0;
 }

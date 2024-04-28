@@ -13,10 +13,9 @@ public:
 	void enqueue(T v);
 	T dequeue();
 	bool esVacia();
-	T peek();
-	void forEach(void (*callback)(T));
+	Nodo<T> peek();
+	void forEach(function<void(T, bool)> callback);
 	int size();
-
 };
 
 template<class T>
@@ -33,17 +32,17 @@ bool Cola<T>::esVacia() {
 }
 
 template<class T>
-inline T Cola<T>::peek()
+inline Nodo<T> Cola<T>::peek()
 {
-	return inicio;
+	return *inicio;
 }
 
 template<class T>
-inline void Cola<T>::forEach(void(*callback)(T))
+inline void Cola<T>::forEach(function<void(T, bool)> callback)
 {
 	Nodo<T>* aux = inicio;
 	while (aux != nullptr) {
-		callback(aux->dato);
+		callback(aux->dato, aux == inicio);
 		aux = aux->siguiente;
 	}
 }
