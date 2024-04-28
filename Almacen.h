@@ -79,12 +79,7 @@ inline void Almacen<T>::registrarPedido()
 	cout << "\n\nIngrese la cantidad a pedir: ";
 	cin >> temp_cantidad;
 
-	proveedor->agregarPedido("El pepe", 10);
-	proveedor->agregarPedido("El pepe", 10);
-	proveedor->agregarPedido("El pepe", 10);
-	proveedor->agregarPedido("El pepe", 10);
-	proveedor->agregarPedido("El pepe", 10);
-	proveedor->agregarPedido("El pepe", 10);
+	proveedor->agregarPedido(temp_Name, temp_cantidad);
 }
 
 template<class T>
