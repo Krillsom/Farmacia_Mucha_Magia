@@ -8,11 +8,10 @@ private:
 	T1 nombre;
 	T2 cantidad;
 	T3 precio;
-	int pos;
 
 public:
 	Medicamento();
-	Medicamento(T1 nombre, T2 cantidad, T3 precio, int pos);
+	Medicamento(T1 nombre, T2 cantidad, T3 precio);
 	~Medicamento();
 
 	T1 getNombre();
@@ -24,8 +23,7 @@ public:
 	T3 getPrecio();
 	void setPrecio(T3& Precio);
 
-	void mostrar(short baseY);
-
+	void mostrar(short baseY, bool esInicio, int pos);
 };
 
 
@@ -35,16 +33,14 @@ inline Medicamento<T1, T2, T3>::Medicamento()
 	this->nombre = T1();
 	this->cantidad = T2();
 	this->precio = T3();
-	this->pos = 0;
 }
 
 template<typename T1, typename T2, typename T3>
-inline Medicamento<T1, T2, T3>::Medicamento(T1 nombre, T2 cantidad, T3 precio, int pos)
+inline Medicamento<T1, T2, T3>::Medicamento(T1 nombre, T2 cantidad, T3 precio)
 { 	
 	this->nombre = nombre;
 	this->cantidad = cantidad;
 	this->precio = precio;
-	this->pos = pos;
 }
 
 
@@ -90,7 +86,7 @@ inline void Medicamento<T1, T2, T3>::setPrecio(T3& precio)
 }
 
 template<typename T1, typename T2, typename T3>
-inline void Medicamento<T1, T2, T3>::mostrar(short baseY)
+inline void Medicamento<T1, T2, T3>::mostrar(short baseY, bool esInicio, int pos)
 {
 	stringstream* ss = new stringstream;
 
@@ -101,7 +97,7 @@ inline void Medicamento<T1, T2, T3>::mostrar(short baseY)
 	string* message = new string;
 	*message = ss->str();
 
-	if (this->pos == 0) color(ConsoleColor::Cyan);
+	if (esInicio) color(ConsoleColor::Cyan);
 	else color(ConsoleColor::DarkGray);
 
 	short* x = new short(getXCenter<short>(message->length() + 4));

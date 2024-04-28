@@ -6,19 +6,18 @@
 using namespace std;
 
 int main() {
-	srand(time(nullptr));
-	
-	//Almacen<Medicamento<string, int, float>>* almacen = new Almacen<Medicamento<string, int, float>>;
-	Tienda* objTienda = new Tienda();
+    srand(time(nullptr));
 
-	objTienda->menu();
-	//almacen->mostrarPedidos();
-	/*Farmacia farmacia;
-	farmacia.menu();*/
+    //Almacen<Medicamento<string, int, float>>* almacen = new Almacen<Medicamento<string, int, float>>;
+    Tienda* objTienda = new Tienda();
 
-	delete objTienda;
+    objTienda->menu();
+    //almacen->mostrarPedidos();
+ 
 
-	cin.get();
-	cin.ignore();
-	return 0;
+    delete objTienda;
+
+    cin.get();
+    cin.ignore();
+    return 0;
 }
