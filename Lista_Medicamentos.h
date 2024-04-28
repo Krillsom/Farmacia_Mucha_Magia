@@ -17,6 +17,7 @@ public:
 	void agregaInicial(T medicina);
 	void eliminaInicial();
 	void coutLista();
+	//T eliminarPos(int pos);
 	T obtenerPos(int pos);
 	int getLon();
 
@@ -72,26 +73,26 @@ void Lista_Medicamentos<T>::eliminaInicial() {
 	}
 }
 
-template<class T>
-inline void Lista_Medicamentos<T>::eliminarPos(int pos)
-{
-	if (pos >= 0 && pos < lon) {
-		Nodo* aux = ini;
-		Nodo* anterior = nullptr;
-		for (int i = 0; i < pos; i++) {
-			anterior = aux;
-			aux = aux->sig;
-		}
-		if (anterior != nullptr) {
-			anterior->sig = aux->sig;
-		}
-		else {
-			ini = aux->sig;
-		}
-		delete aux;
-		lon--;
-	}
-}
+//template<class T>
+//inline void Lista_Medicamentos<T>::eliminarPos(int pos)
+//{
+//	if (pos >= 0 && pos < lon) {
+//		Nodo* aux = ini;
+//		Nodo* anterior = nullptr;
+//		for (int i = 0; i < pos; i++) {
+//			anterior = aux;
+//			aux = aux->sig;
+//		}
+//		if (anterior != nullptr) {
+//			anterior->sig = aux->sig;
+//		}
+//		else {
+//			ini = aux->sig;
+//		}
+//		delete aux;
+//		lon--;
+//	}
+//}
 
 
 template<class T>
@@ -109,9 +110,9 @@ T Lista_Medicamentos<T>::obtenerPos(int pos) {
 		}
 		return aux->medicina;
 	}
-	else {
-		return NULL;
-	}
+	/*else {
+		return nullptr;
+	}*/
 }
 
 template<class T>
