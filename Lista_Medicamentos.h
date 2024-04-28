@@ -15,9 +15,11 @@ public:
 	Lista_Medicamentos();
 	~Lista_Medicamentos();
 	void agregaInicial(T medicina);
-	void    eliminaInicial();
+	void eliminaInicial();
 	void coutLista();
-	T       obtenerPos(int pos);
+	T obtenerPos(int pos);
+	int getLon();
+
 };
 
 template <typename T>
@@ -88,4 +90,10 @@ T Lista_Medicamentos<T>::obtenerPos(int pos) {
 	else {
 		return NULL;
 	}
+}
+
+template<class T>
+inline int Lista_Medicamentos<T>::getLon()
+{
+	return this->lon;
 }
