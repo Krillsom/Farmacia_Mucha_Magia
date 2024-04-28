@@ -23,3 +23,47 @@ template <typename T>
 inline T getYCenter(T lengthY) {
 	return ((Console::WindowHeight - lengthY) / 2);
 }
+
+
+
+inline short logica_menu(int pos_y_inicial, int cantidad_opciones, int x, int y) {
+	short opcion = 1;
+	string indicador = "<=";
+	while (1) {
+		if (_kbhit()) {
+			char caracter = _getch();
+			if (caracter == 'w') {
+				gotoxy(x, y);
+				cout << "   ";
+				opcion--;
+				y -= 2;
+				if (opcion < 1) {
+					y = pos_y_inicial + (cantidad_opciones*2)-2;
+					opcion = cantidad_opciones;
+				};
+				gotoxy(x, y);
+				Console::ForegroundColor = ConsoleColor::Cyan;
+				cout << indicador;
+			}
+			if (caracter == 's') {
+				gotoxy(x, y);
+				cout << "   ";
+				opcion++;
+				y += 2;
+				if (opcion > cantidad_opciones) {
+					y = pos_y_inicial;
+					opcion = 1;
+				};
+				gotoxy(x, y);
+				Console::ForegroundColor = ConsoleColor::Cyan;
+				cout << indicador;
+			}
+			else if (caracter == 13) {
+				Console::ForegroundColor = ConsoleColor::White;
+				break;
+			};
+		}
+	}
+
+	return opcion;
+}

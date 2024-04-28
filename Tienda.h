@@ -1,7 +1,9 @@
-#pragma once
+﻿#pragma once
 #include "Almacen.h"
 #include "Caja.h"
 #include "Medicamento.h"
+#include "Encabezados.h"
+
 
 using namespace System;
 
@@ -12,7 +14,7 @@ public:
 	~Tienda();
 	void menu();
 private:
-	Almacen<Medicamento<float>>* objAlmacen = new Almacen<Medicamento<float>>();
+	Almacen<Medicamento<string, int, float>>* objAlmacen = new Almacen<Medicamento<string, int, float>>();
 	Caja<int>* objCaja = new Caja<int>();
 };
 
@@ -24,15 +26,12 @@ Tienda::~Tienda()
 {
 }
 
-void gotoxy(int x, int y) {
-	Console::SetCursorPosition(x, y);
-}
 
 inline void Tienda::menu()
 {
-	Console::Clear;
+	Console::Clear();
 	Console::SetWindowSize(130, 50);
-	string indicador = "=>";
+	string indicador = "<=";
 	gotoxy(3, 3); cout <<  R"(    ______                                _                   __  ___           __             __  ___            _          )";
 	gotoxy(3, 4); cout <<  R"(   / ____/___ __________ ___  ____ ______(_)___ _     __     /  |/  /_  _______/ /_  ____ _   /  |/  /___ _____ _(_)___ _    )";
 	gotoxy(3, 5); cout <<  R"(  / /_  / __ `/ ___/ __ `__ \/ __ `/ ___/ / __ `/  __/ /_   / /|_/ / / / / ___/ __ \/ __ `/  / /|_/ / __ `/ __ `/ / __ `/    )";
@@ -40,7 +39,46 @@ inline void Tienda::menu()
 	gotoxy(3, 7); cout << R"(/_/    \__,_/_/  /_/ /_/ /_/\__,_/\___/_/\__,_/    /_/    /_/  /_/\__,_/\___/_/ /_/\__,_/  /_/  /_/\__,_/\__, /_/\__,_/      )";
 	gotoxy(3, 8); cout <<  R"(                                                                                                        /____/               )";
 	gotoxy(3, 9); cout << R"(-----------------------------------------------------------------------------------------------------------------------------)";
+
+	gotoxy(55, 12); cout << R"(Caja)";
+	gotoxy(55, 14); cout << R"(Almacen)";
+	gotoxy(55, 16); cout << R"(Integrantes)";
+	gotoxy(55, 18); cout << R"(Salir)";
+
+
+	//parametros para escoger en el men�
+	int x = 70;  //un poco m�s a la derecha de donde estan las opciones
+	int y_inicial = 12;
+	int y = 12;
+	short opcion = 1;
+
+
+	gotoxy(x, y_inicial); cout << indicador;
+
+	opcion = logica_menu(y_inicial, 4, x, y);
+
+	if (opcion == 1) {
+		//Caja_menu();   //mostrar el menu de caja
+		Console::Clear();
+		menu();
+	}
+	if (opcion == 2) {
+		//almacen_menu();    //mostrar el menu de almacen
+		Console::Clear();
+		objAlmacen->Almacen_menu();
+		menu();
+	}
+	if (opcion == 3) {
+		//pantalla_integrantes();
+		Console::Clear();
+		menu();
+	}
+	if (opcion == 4) {
+		exit(0);
+	}
+
 }
+
 
 
 
