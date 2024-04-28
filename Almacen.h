@@ -34,6 +34,8 @@ inline void Almacen<T>::agregarInicioLista(T obj)
 template<class T>
 inline void Almacen<T>::Almacen_menu()
 {
+
+	Console::Clear();
 	string indicador = "<=";
 	gotoxy(45, 3); cout << R"(    ___    __                              )";
 	gotoxy(45, 4); cout << R"(   /   |  / /___ ___  ____ _________  ____ )";

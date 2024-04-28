@@ -44,7 +44,7 @@ inline void Tienda::menu()
 
 
 	//parametros para escoger en el men�
-	int x = 70;  //un poco m�s a la derecha de donde estan las opciones
+	int x = 50;  //un poco m�s a la derecha de donde estan las opciones
 	int y_inicial = 12;
 	int y = 12;
 	short opcion = 1;
@@ -61,7 +61,6 @@ inline void Tienda::menu()
 	}
 	if (opcion == 2) {
 		//almacen_menu();    //mostrar el menu de almacen
-		Console::Clear();
 		objAlmacen->Almacen_menu();
 		menu();
 	}

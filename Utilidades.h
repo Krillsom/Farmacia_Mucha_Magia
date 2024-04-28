@@ -26,7 +26,7 @@ inline T getYCenter(T lengthY) {
 
 inline short logica_menu(int pos_y_inicial, int cantidad_opciones, int x, int y) {
 	short opcion = 1;
-	string indicador = "<=";
+	string indicador = "=>";
 	while (1) {
 		if (_kbhit()) {
 			char caracter = _getch();
