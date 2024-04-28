@@ -79,7 +79,6 @@ inline void Almacen<T>::Almacen_menu()
 	if (opcion == 1) {
 		Console::Clear();
 		mostrarPedidos();
-		Almacen_menu();
 	}
 	if (opcion == 2) {
 		//almacen_menu();    //mostrar el menu de almacen
@@ -149,7 +148,10 @@ inline void Almacen<T>::registrarPedido()
 	int temp_cantidad = 0;
 
 	gotoxy(getXCenter(35), getYCenter(5));  cout << "Ingrese el nombre de la medicina: ";
-	cin >> temp_Name;
+	
+	cin.ignore();
+	getline(cin, temp_Name); 
+
 	gotoxy(getXCenter(30), getYCenter(5) + 2);  cout << "Ingrese la cantidad a pedir: ";
 	cin >> temp_cantidad;
 

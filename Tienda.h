@@ -60,6 +60,7 @@ inline void Tienda::menu()
 
 	if (opcion == 1) {
 		//Caja_menu();   //mostrar el menu de caja
+		objCaja->menu_caja();
 		Console::Clear();
 		menu();
 	}
