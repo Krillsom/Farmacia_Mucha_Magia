@@ -97,9 +97,10 @@ void Lista_Medicamentos<T>::eliminaInicial() {
 template<class T>
 inline void Lista_Medicamentos<T>::coutLista()
 {
+	int pos = 0;
 	Nodo* aux = ini;
 	while (aux != nullptr) {
-		std::cout << aux->medicina.getNombre() << std::endl;
+		aux->medicina.mostrar(9, ConsoleColor::Yellow, ++pos);
 		aux = aux->sig;
 	}
 

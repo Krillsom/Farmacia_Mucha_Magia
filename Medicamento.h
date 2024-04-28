@@ -24,6 +24,7 @@ public:
 	void setPrecio(T3& Precio);
 
 	void mostrar(short baseY, bool esInicio, int pos);
+	void mostrar(short baseY, ConsoleColor cc, int pos);
 };
 
 
@@ -105,6 +106,47 @@ inline void Medicamento<T1, T2, T3>::mostrar(short baseY, bool esInicio, int pos
 
 	gotoxy<short>(*x - 2, *y - 1);
 	
+	cout << char(201);
+	for (short i = 0; i < message->length() + 2; i++) cout << char(205);
+	cout << char(187);
+
+	gotoxy<short>(*x - 2, *y);
+
+	cout << char(186) << " " << *message << " " << char(186);
+
+	gotoxy<short>(*x - 2, *y + 1);
+
+	cout << char(200);
+	for (short i = 0; i < message->length() + 2; i++) cout << char(205);
+	cout << char(188);
+
+	color(ConsoleColor::White);
+
+	delete ss;
+	delete message;
+	delete x;
+	delete y;
+}
+
+template<typename T1, typename T2, typename T3>
+inline void Medicamento<T1, T2, T3>::mostrar(short baseY, ConsoleColor cc, int pos)
+{
+	stringstream* ss = new stringstream;
+
+	*ss << "Nombre: " << this->nombre;
+	*ss << "   Cantidad: " << this->cantidad;
+	*ss << "   Precio: " << this->precio;
+
+	string* message = new string;
+	*message = ss->str();
+
+	color(cc);
+
+	short* x = new short(getXCenter<short>(message->length() + 4));
+	short* y = new short(baseY + pos * 3);
+
+	gotoxy<short>(*x - 2, *y - 1);
+
 	cout << char(201);
 	for (short i = 0; i < message->length() + 2; i++) cout << char(205);
 	cout << char(187);
