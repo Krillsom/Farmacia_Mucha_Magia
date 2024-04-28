@@ -1,6 +1,5 @@
 #pragma once
 #include "Medicamento.h"
-#include <iostream>
 
 template<class T>
 class Lista_Medicamentos
@@ -17,7 +16,8 @@ public:
 	void    eliminaInicial();
 	void    eliminarPos(int pos);
 	void	coutLista();
-	int     get_lon();
+	int get_lon();
+	void forEach(function<void(T)> callback);
 	T       obtenerPos(int pos);
 };
 
@@ -124,4 +124,12 @@ inline int Lista_Medicamentos<T>::get_lon()
 	return this->lon;
 }
 
-
+template<class T>
+inline void Lista_Medicamentos<T>::forEach(function<void(T)> callback)
+{
+	Nodo* aux = ini;
+	while (aux != nullptr) {
+		callback(aux->medicina);
+		aux = aux->sig;
+	}
+}

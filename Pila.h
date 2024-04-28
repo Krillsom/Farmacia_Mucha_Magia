@@ -12,6 +12,8 @@ public:
 	void push(T v);
 	T pop();
 	bool estaVacia();
+	void forEach(function<void(T)> callback);
+
 private:
 	Nodo<T>* tope;
 };
@@ -44,4 +46,14 @@ template<class T>
 bool Pila<T>::estaVacia()
 {
 	return (tope == NULL);
+}
+
+template<class T>
+inline void Pila<T>::forEach(function<void(T)> callback)
+{
+	Nodo<T>* aux = tope;
+	while (aux != nullptr) {
+		callback(aux->dato);
+		aux = aux->siguiente;
+	}
 }

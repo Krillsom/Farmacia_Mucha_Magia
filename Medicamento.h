@@ -10,6 +10,7 @@ private:
 	T3 precio;
 
 public:
+	struct MedicamentoStruct;
 	Medicamento();
 	Medicamento(T1 nombre, T2 cantidad, T3 precio);
 	~Medicamento();
@@ -25,7 +26,23 @@ public:
 
 	void mostrar(short baseY, bool esInicio, int pos);
 	void mostrar(short baseY, ConsoleColor cc, int pos);
+
+	MedicamentoStruct toStruct();
 };
+
+template <typename T1, typename T2, typename T3>
+struct Medicamento<T1, T2, T3>::MedicamentoStruct {
+	char nombre[50];
+	int cantidad;
+	float precio;
+
+	MedicamentoStruct(char* _nombre, int _cantidad, float _precio) {
+		strcpy(nombre, _nombre);
+		cantidad = _cantidad;
+		precio = _precio;
+	};
+};
+
 
 
 template<typename T1, typename T2, typename T3>
@@ -77,7 +94,7 @@ inline void Medicamento<T1, T2, T3>::setCantidad(T2& cantidad)
 template<typename T1, typename T2, typename T3>
 inline T3 Medicamento<T1, T2, T3>::getPrecio()
 {
-	return this->Precio;
+	return this->precio;
 }
 
 template<typename T1, typename T2, typename T3>
@@ -167,4 +184,10 @@ inline void Medicamento<T1, T2, T3>::mostrar(short baseY, ConsoleColor cc, int p
 	delete message;
 	delete x;
 	delete y;
+}
+
+template<typename T1, typename T2, typename T3>
+inline struct Medicamento<T1, T2, T3>::MedicamentoStruct Medicamento<T1, T2, T3>::toStruct()
+{
+	return MedicamentoStruct(nombre, cantidad, precio);
 }

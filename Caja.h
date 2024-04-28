@@ -51,6 +51,9 @@ void Caja<T>::registrarVenta() {
 	string nombreMedicamento;
 	int cantidadVenta;
 
+	string mensaje = "Productos disponibles";
+
+	gotoxy(getXCenter(mensaje.size()), 7); cout << mensaje;
 	unalista.coutLista();
 	gotoxy(3, 20);
 	cout << "Ingrese el nombre del medicamento: "; cin >> nombreMedicamento;
@@ -96,12 +99,12 @@ void Caja<T>::mostrarHistorialVentas(){
 	gotoxy(getXCenter(105), Console::WindowTop + 5); cout << R"(/_/ /_/___//____//_/  \____/_/ |_/___/_/  |_/_____/  /_____/_____/     |___/_____/_/ |_/ /_/ /_/  |_/____/  )";
 																												
 
-	Pila<T> copiaHistorial = historialVentas;
-	while (!copiaHistorial.estaVacia()) {
+	int pos = 0;
 
-		
-		T dato = copiaHistorial.pop();
-	}
+	historialVentas.forEach([pos] (T venta)mutable  {
+		venta.mostrar(7, ConsoleColor::Cyan, ++pos);
+	});
+
 	gotoxy(getXCenter(10), 45);
 	system("pause");
 }

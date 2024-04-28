@@ -8,6 +8,8 @@ class Almacen
 private:
 	Proveedor<T>* proveedor;
 	Lista_Medicamentos<T> unalista;
+	ofstream* archivoEscritor;
+	ifstream* archivoLector;
 
 public:
 	Almacen();
@@ -15,11 +17,13 @@ public:
 
 	void registrarPedido();
 	void mostrarPedidos();
-	void elegirOpcion(bool pedirPedidoDesabilitado);
+	void elegirOpcion(bool pedirPedidoDesabilitado, function<void()>* adicional = nullptr);
 	void mostrarBotones(bool pedirPedidoDesabilitado);
 	void agregarInicioLista(T obj);
 	void mostrarInventario();
-	void guardarMedicamentosPersistente();
+	void abrirArchivo();
+	void guardarMedicamentoPersistente(T obj);
+	void obtenerMedicamentosInventario();
 
 	void Almacen_menu();
 
@@ -35,6 +39,16 @@ template <class T>
 Almacen<T>::Almacen()
 {
 	this->proveedor = new Proveedor<T>;
+	this->archivoEscritor = new ofstream();
+	this->archivoLector = new ifstream();
+	abrirArchivo();
+}
+
+template <class T>
+inline void Almacen<T>::abrirArchivo()
+{
+	archivoEscritor->open("Medicamentos.dat", ios::binary | ios::app);
+	archivoLector->open("Medicamentos.dat", ios::in | ios::binary);
 }
 
 template <class T>
@@ -42,7 +56,6 @@ Almacen<T>::~Almacen()
 {
 	delete proveedor;
 }
-
 
 template<class T>
 inline Lista_Medicamentos<T> Almacen<T>::getUnaLista() {
@@ -105,7 +118,6 @@ inline T Almacen<T>::getElementoLista(int n)
 }
 
 
-
 template<class T>
 inline void Almacen<T>::mostrarPedidos()
 {
@@ -134,7 +146,11 @@ inline void Almacen<T>::mostrarPedidos()
 		});
 	}
 	mostrarBotones(!proveedor->size());
-	elegirOpcion(!proveedor->size());
+
+	elegirOpcion(!proveedor->size(), new function<void ()>([this]() {
+		archivoEscritor->close();
+		archivoEscritor->open("Medicamentos.dat", ios::binary | ios::app);
+	}));
 }
 
 template<class T>
@@ -144,11 +160,8 @@ inline void Almacen<T>::registrarPedido()
 	string temp_Name = "";
 	int temp_cantidad = 0;
 
-	gotoxy(getXCenter(35), getYCenter(5));  cout << "Ingrese el nombre de la medicina: ";
-	
-	cin.ignore();
-	getline(cin, temp_Name); 
-
+	gotoxy(getXCenter(35), getYCenter(5)); cout << "Ingrese el nombre de la medicina: ";
+	cin.ignore(); getline(cin, temp_Name);
 	gotoxy(getXCenter(30), getYCenter(5) + 2);  cout << "Ingrese la cantidad a pedir: ";
 	cin >> temp_cantidad;
 
@@ -162,7 +175,7 @@ inline void Almacen<T>::registrarPedido()
 //------------------
 
 template<class T>
-inline void Almacen<T>::elegirOpcion(bool pedirPedidoDesabilitado)
+inline void Almacen<T>::elegirOpcion(bool pedirPedidoDesabilitado, function<void()>* adicional)
 {
 	int opcion = 0;
 
@@ -199,6 +212,7 @@ inline void Almacen<T>::elegirOpcion(bool pedirPedidoDesabilitado)
 	if (opcion == 0) {
 		// Volver al menu
 		Console::Clear();
+		if(adicional != nullptr) (*adicional)();
 		Almacen_menu();
 	}
 	else if (opcion == 1) {
@@ -206,6 +220,7 @@ inline void Almacen<T>::elegirOpcion(bool pedirPedidoDesabilitado)
 		Console::Clear();
 		T pedido = proveedor->recibirPedido();
 		unalista.agregaInicial(pedido);
+		guardarMedicamentoPersistente(pedido);
 		mostrarPedidos();
 
 		Console::Clear();
@@ -263,29 +278,54 @@ inline void Almacen<T>::mostrarInventario()
 
 
 	gotoxy(getXCenter(53), Console::WindowTop + 1); cout << R"(    ____                      __             _)";
-	gotoxy(getXCenter(53), Console::WindowTop + 2); cout << R"(   /  _/___ _   _____  ____  / /_____ ______(_)___)"; 
+	gotoxy(getXCenter(53), Console::WindowTop + 2); cout << R"(   /  _/___ _   _____  ____  / /_____ ______(_)___)";
 	gotoxy(getXCenter(53), Console::WindowTop + 3); cout << R"(   / // __ \ | / / _ \/ __ \/ __/ __ `/ ___/ / __ \)";
 	gotoxy(getXCenter(53), Console::WindowTop + 4); cout << R"( _/ // / / / |/ /  __/ / / / /_/ /_/ / /  / / /_/ /)";
-	gotoxy(getXCenter(53), Console::WindowTop + 5); cout << R"(/___/_/ /_/|___/\___/_/ /_/\__/\__,_/_/  /_/\____/)";                              
+	gotoxy(getXCenter(53), Console::WindowTop + 5); cout << R"(/___/_/ /_/|___/\___/_/ /_/\__/\__,_/_/  /_/\____/)";
+
+	obtenerMedicamentosInventario();
 
 	unalista.coutLista();
 
 	mostrarOpcion(new string("Volver al men" + string(1, 163)), getXCenter(18), true);
 
 	elegirOpcion(true);
-	
+
 }
 
 template <class T>
-inline void Almacen<T>::guardarMedicamentosPersistente() {
-	ofstream* archivo = new ofstream("Medicamentos.txt", ios::binary | ios::out);
-	archivo->open();
+inline void Almacen<T>::guardarMedicamentoPersistente(T nodo) {
 
-	if (archivo->is_open()) {
+	char envio[50];
 
-		
+	strcpy(envio, nodo.getNombre().c_str());
 
+	Medicamento<const char*, int, float>::MedicamentoStruct medicamentoStruct(envio,
+		int(nodo.getCantidad()), float(nodo.getPrecio()));
+
+
+	if (archivoEscritor->is_open()) {
+		archivoEscritor->write((char*)&medicamentoStruct,
+			sizeof(Medicamento<string, int, float>::MedicamentoStruct));
 	}
 
-	
+}
+
+template <class T>
+inline void Almacen<T>::obtenerMedicamentosInventario() {
+
+	Medicamento<string, int, float>::MedicamentoStruct medicamento("", 0, 0.0);
+
+
+	if (archivoLector->is_open()) {
+
+		while (archivoLector->read((char* )&medicamento, sizeof(Medicamento<string, int, float>::MedicamentoStruct))) {
+			// Procesar la estructura leída
+			// Aquí puedes hacer lo que necesites con la estructura leída desde el archivo
+			Medicamento<string, int, float> medicamentoGuardado(medicamento.nombre, medicamento.cantidad, medicamento.precio);
+
+			unalista.agregaInicial(medicamentoGuardado);
+		}
+	}
+
 }
