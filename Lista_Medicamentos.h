@@ -101,12 +101,6 @@ inline void Lista_Medicamentos<T>::coutLista()
 }
 
 template<class T>
-inline int Lista_Medicamentos<T>::get_lon()
-{
-	return this->lon;
-}
-
-template<class T>
 T Lista_Medicamentos<T>::obtenerPos(int pos) {
 
 	if (pos >= 0 && pos < lon) {
@@ -122,7 +116,7 @@ T Lista_Medicamentos<T>::obtenerPos(int pos) {
 }
 
 template<class T>
-inline int Lista_Medicamentos<T>::getLon()
+inline int Lista_Medicamentos<T>::get_lon()
 {
 	return this->lon;
 }
