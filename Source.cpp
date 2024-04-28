@@ -1,7 +1,5 @@
-#include "Tienda.h"
 #include "string"
-#include "Almacen.h"
-#include "Medicamento.h"
+#include "Tienda.h"
 
 using namespace std;
 

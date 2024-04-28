@@ -19,16 +19,23 @@ public:
 	void mostrarBotones(bool pedirPedidoDesabilitado);
 	void agregarInicioLista(T obj);
 	void mostrarInventario();
-
+	void guardarInventario();
 	void Almacen_menu();
 
 	T getElementoLista(int n);
 	void mostrarOpcion(string* message, int x, bool activado = false, bool desactivado = false);
+
+	Lista_Medicamentos<T> getUnaLista();
 };
 
+
 template<class T>
-inline void Almacen<T>::agregarInicioLista(T obj)
-{
+inline Lista_Medicamentos<T> Almacen<T>::getUnaLista() {
+	return unalista;
+}
+
+template<class T>
+inline void Almacen<T>::agregarInicioLista(T obj) {
 	unalista.agregaInicial(obj);
 }
 
@@ -151,8 +158,8 @@ inline void Almacen<T>::elegirOpcion(bool pedirPedidoDesabilitado)
 		if (_kbhit()) {
 			char tecla = _getch();
 
-			
-			if(!pedirPedidoDesabilitado) {
+
+			if (!pedirPedidoDesabilitado) {
 				if (tecla == 75) {
 					opcion--;
 					if (opcion < 0) opcion = 1;
@@ -247,5 +254,5 @@ inline void Almacen<T>::mostrarInventario()
 	mostrarOpcion(new string("Volver al men" + string(1, 163)), getXCenter(18), true);
 
 	elegirOpcion(true);
-	
+
 }
