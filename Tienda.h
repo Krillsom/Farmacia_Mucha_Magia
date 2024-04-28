@@ -30,6 +30,7 @@ Tienda::~Tienda()
 
 inline void Tienda::menu()
 {
+	Console::SetWindowSize(130, 50);
 	Console::Clear();
 	string indicador = "<=";
 	gotoxy(3, 3); cout <<  R"(    ______                                _                   __  ___           __             __  ___            _      )";
@@ -69,6 +70,7 @@ inline void Tienda::menu()
 	}
 	if (opcion == 3) {
 		//pantalla_integrantes();
+		mostrar_creditos();
 		Console::Clear();
 		menu();
 	}

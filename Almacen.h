@@ -23,6 +23,7 @@ public:
 	void Almacen_menu();
 
 	T getElementoLista(int n);
+
 	void mostrarOpcion(string* message, int x, bool activado = false, bool desactivado = false);
 
 	Lista_Medicamentos<T> getUnaLista();
@@ -94,12 +95,6 @@ inline void Almacen<T>::Almacen_menu()
 	if (opcion == 4) {
 		Console::Clear();
 	}
-}
-
-template<class T>
-inline Lista_Medicamentos<T> Almacen<T>::getLista()
-{
-	return unalista;
 }
 
 template<class T>

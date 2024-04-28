@@ -33,17 +33,6 @@ struct Lista_Medicamentos<T>::Nodo {
 	Nodo(T medicina = NULL, Nodo* sig = nullptr) : medicina(medicina), sig(sig) {}
 };
 
-//-----------------------------------
-template<class T>
-inline void Lista_Medicamentos<T>::forEach(void(*callback)(T))
-{
-	Nodo* aux = ini;
-	while (aux != nullptr) {
-		callback(aux->medicina);
-		aux = aux->sig;
-	}
-}
-//-------------------------------------
 
 
 template<class T>
