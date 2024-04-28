@@ -1,7 +1,10 @@
 #include "string"
 #include "Almacen.h"
 #include "Medicamento.h"
+#include "Lista_Medicamentos.h"
 #include "Caja.h"
+#include "Tienda.h"
+
 
 using namespace std;
 
@@ -16,15 +19,18 @@ int main() {
 	Farmacia farmacia;
 	farmacia.menu();*/
 
-	Caja<string> caja;
+	//Lista_Medicamentos<Medicamento<string, int, float>>* lista = new Lista_Medicamentos<Medicamento<string,int,float>>;
+
+	//Caja<Medicamento<string,int,float>> caja(*lista);
 
 	string nombreMedicamento = "Paracetamol";
 	int cantidadVenta = 10;
 
-	caja.registrarVenta(nombreMedicamento, cantidadVenta);
-
-	caja.mostrarHistorialVentas();
-
+	//caja.registrarVenta(nombreMedicamento, cantidadVenta);
+	//Console::Clear;
+	//caja.mostrarHistorialVentas();
+	Tienda* objtienda = new Tienda();
+	objtienda->menu();
 
 	cin.get();
 	cin.ignore();

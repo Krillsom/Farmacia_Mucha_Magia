@@ -26,6 +26,18 @@ inline T getYCenter(T lengthY) {
 
 
 
+inline void mostrar_creditos() {
+	gotoxy(45, 2); cout << "+-+-+-+-+-+-+-+-+";
+	gotoxy(45, 3); cout << "|C|R|E|D|I|T|O|S|";
+	gotoxy(45, 4); cout << "+-+-+-+-+-+-+-+-+";
+	gotoxy(10, 6); cout << "Integrantes:             Carrera:                       Secci" << char(162) << "n:";
+	gotoxy(10, 7); cout << "- Kevin Chi              Ingenier" << char(161) << "a de Software         SW1C";
+	gotoxy(10, 8); cout << "- Gael Rivera";
+	gotoxy(10, 9); cout << "- Alejandro Oroncoy";
+	gotoxy(10, 10); cout << "Presione enter para saltar";
+}
+
+
 inline short logica_menu(int pos_y_inicial, int cantidad_opciones, int x, int y) {
 	short opcion = 1;
 	string indicador = "=>";

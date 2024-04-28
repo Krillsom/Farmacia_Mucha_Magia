@@ -14,16 +14,35 @@ public:
 	~Almacen();
 
 	void registrarPedido();
-	void mostrarPedidos();
-	void elegirOpcion();
+
 	void mostrarBotones();
 	void agregarInicioLista(T obj);
 
+	void mostrar_inventario();
 	void Almacen_menu();
 
+	Lista_Medicamentos<T> getLista();
+
 	T getElementoLista(int n);
+
+	void mostrarPedidos();
+	void elegirOpcion();
 	void mostrarOpcion(string* message, int x, bool activado = false);
 };
+
+
+template <class T>
+Almacen<T>::Almacen()
+{
+	this->proveedor = new Proveedor<T>;
+}
+
+template <class T>
+Almacen<T>::~Almacen()
+{
+	delete proveedor;
+}
+
 
 template<class T>
 inline void Almacen<T>::agregarInicioLista(T obj)
@@ -31,6 +50,15 @@ inline void Almacen<T>::agregarInicioLista(T obj)
 	unalista.agregaInicial(obj);
 }
 
+//----------------------
+template<class T>
+inline void Almacen<T>::mostrar_inventario()
+{
+	unalista.forEach([](T t) {
+		t.mostrar(9);
+	});
+}
+//----------------------
 template<class T>
 inline void Almacen<T>::Almacen_menu()
 {
@@ -46,31 +74,44 @@ inline void Almacen<T>::Almacen_menu()
 
 	gotoxy(50, 10); cout << R"(Lista de Pedidos Pendientes)";
 	gotoxy(50, 12); cout << R"(Realizar Pedidos)";
-	gotoxy(50, 14); cout << R"(Recibir Pedido)";
-	gotoxy(50, 16); cout << R"(Inventario)";
-	gotoxy(50, 18); cout << R"(Volver al Menu)";
+	gotoxy(50, 14); cout << R"(Inventario)";
+	gotoxy(50, 16); cout << R"(Volver al Menu)";
 
-	short opcion = logica_menu(10, 5, 45, 10);
+	short opcion = logica_menu(10, 4, 45, 10);
 
 	if (opcion == 1) {
-		//Caja_menu();   //mostrar el menu de caja
-		mostrarPedidos();
 		Console::Clear();
+		mostrarPedidos();
+		Almacen_menu();
 	}
 	if (opcion == 2) {
 		//almacen_menu();    //mostrar el menu de almacen
 		Console::Clear();
+		registrarPedido();
+		Almacen_menu();
 	}
 	if (opcion == 3) {
 		//pantalla_integrantes();
 		Console::Clear();
 	}
 	if (opcion == 4) {
-	}
+		Console::Clear();
 
+		mostrar_inventario();
+		cin.get();
+		cin.ignore();
+		Almacen_menu();
+
+	}
 	if (opcion == 5) {
 		Console::Clear();
 	}
+}
+
+template<class T>
+inline Lista_Medicamentos<T> Almacen<T>::getLista()
+{
+	return unalista;
 }
 
 template<class T>
@@ -80,17 +121,7 @@ inline T Almacen<T>::getElementoLista(int n)
 	return unalista.obtenerPos(n);
 }
 
-template <class T>
-Almacen<T>::Almacen()
-{
-	this->proveedor = new Proveedor<T>;
-}
 
-template <class T>
-Almacen<T>::~Almacen()
-{
-	delete proveedor;
-}
 
 template<class T>
 inline void Almacen<T>::mostrarPedidos()
@@ -104,7 +135,7 @@ inline void Almacen<T>::mostrarPedidos()
 
 	proveedor->forEach([](T t) {
 		t.mostrar(9);
-		});
+	});
 
 	int base_buttons = 9 + proveedor->size() * 3;
 
@@ -126,6 +157,12 @@ inline void Almacen<T>::registrarPedido()
 
 	proveedor->agregarPedido(temp_Name, temp_cantidad);
 }
+
+
+
+//------------------
+//cosas de provedor
+//------------------
 
 template<class T>
 inline void Almacen<T>::elegirOpcion()

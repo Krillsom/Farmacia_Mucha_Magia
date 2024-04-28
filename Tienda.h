@@ -14,12 +14,16 @@ public:
 	~Tienda();
 	void menu();
 private:
-	Almacen<Medicamento<string, int, float>>* objAlmacen = new Almacen<Medicamento<string, int, float>>();
-	Caja<int>* objCaja = new Caja<int>();
+
+
+	Almacen<Medicamento<string, int, float>>* objAlmacen;
+	Caja<Medicamento<string, int, float>>* objcaja;
 };
 
 Tienda::Tienda()
 {
+	objAlmacen = new Almacen<Medicamento<string, int, float>>(); 
+	objcaja	= new Caja<Medicamento<string, int, float>>(objAlmacen->getLista());
 }
 
 Tienda::~Tienda()

@@ -9,6 +9,7 @@ class Caja
 {
 public:
 	Caja();
+	Caja(Lista_Medicamentos<T> unalista);
 	~Caja();
 
 	void registrarVenta(string nombreMedicamento, int cantidadVenta);
@@ -16,12 +17,12 @@ public:
 
 private:
 	Lista_Medicamentos<T> unalista;
-	Pila<T> historialCompras;
+	Pila<T> historialVentas;
 };
 
 template <class T>
-Caja<T>::Caja()
-{
+Caja<T>::Caja(Lista_Medicamentos<T> unalista){
+	this->unalista, unalista;
 }
 
 template <class T>
@@ -31,18 +32,18 @@ Caja<T>::~Caja()
 
 template<class T>
 void Caja<T>::registrarVenta(string nombreMedicamento, int cantidadVenta) {
-	gotoxy(getXCenter(105), Console::WindowTop + 1); cout << R"(	____  _______________________________  ___    ____     _    _________   ___________ )";
-	gotoxy(getXCenter(105), Console::WindowTop + 2); cout << R"(   / __ \/ ____/ ____/  _/ ___/_  __/ __ \/   |  / __ \   | |  / / ____/ | / /_  __/   |)";
-	gotoxy(getXCenter(105), Console::WindowTop + 3); cout << R"(  / /_/ / __/ / / __ / / \__ \ / / / /_/ / /| | / /_/ /   | | / / __/ /  |/ / / / / /| |)";
-	gotoxy(getXCenter(105), Console::WindowTop + 4); cout << R"( / _, _/ /___/ /_/ // / ___/ // / / _, _/ ___ |/ _, _/    | |/ / /___/ /|  / / / / ___ |)";
-	gotoxy(getXCenter(105), Console::WindowTop + 5); cout << R"(/_/ |_/_____/\____/___//____//_/ /_/ |_/_/  |_/_/ |_|     |___/_____/_/ |_/ /_/ /_/  |_|)";
+	gotoxy(getXCenter(86), Console::WindowTop + 1); cout << R"( 	____  _______________________________  ___    ____     _    _________   ___________ )";
+	gotoxy(getXCenter(86), Console::WindowTop + 2); cout << R"(   / __ \/ ____/ ____/  _/ ___/_  __/ __ \/   |  / __ \   | |  / / ____/ | / /_  __/   |)";
+	gotoxy(getXCenter(86), Console::WindowTop + 3); cout << R"(  / /_/ / __/ / / __ / / \__ \ / / / /_/ / /| | / /_/ /   | | / / __/ /  |/ / / / / /| |)";
+	gotoxy(getXCenter(86), Console::WindowTop + 4); cout << R"( / _, _/ /___/ /_/ // / ___/ // / / _, _/ ___ |/ _, _/    | |/ / /___/ /|  / / / / ___ |)";
+	gotoxy(getXCenter(86), Console::WindowTop + 5); cout << R"(/_/ |_/_____/\____/___//____//_/ /_/ |_/_/  |_/_/ |_|     |___/_____/_/ |_/ /_/ /_/  |_|)";
 	
 	bool medicamentoEnInventario = false;
 	int cantidadDisponible = 0;
 
 	Medicamento<string, int, float> venta;
 
-	for (int i = 0; i < unalista.getLon(); ++i)
+	for (int i = 0; i < unalista.get_lon(); ++i)
 	{
 		if (unalista.obtenerPos(i).getNombre() == nombreMedicamento) {
 			medicamentoEnInventario = true;
@@ -61,7 +62,7 @@ void Caja<T>::registrarVenta(string nombreMedicamento, int cantidadVenta) {
 		//Logica de la venta...
 		
 		cout << "Venta realizada: " << cantidadVenta << " unidades de " << nombreMedicamento << endl;
-		historialCompras.push(venta);
+		historialVentas.push(venta);
 	}
 	else {
 		cout << "Error: No hay suficientes unidades de '" << nombreMedicamento << "' en el inventario." << endl;
@@ -78,11 +79,10 @@ void Caja<T>::mostrarHistorialVentas(){
 	gotoxy(getXCenter(105), Console::WindowTop + 5); cout << R"(/_/ /_/___//____//_/  \____/_/ |_/___/_/  |_/_____/  /_____/_____/     |___/_____/_/ |_/ /_/ /_/  |_/____/  )";
 																												
 
-	Pila<T> copiaHistorial = historialCompras;
+	Pila<T> copiaHistorial = historialVentas;
 	while (!copiaHistorial.estaVacia()) {
 
 		T dato = copiaHistorial.pop();
-		cout << dato << endl;
 	}
 
 }

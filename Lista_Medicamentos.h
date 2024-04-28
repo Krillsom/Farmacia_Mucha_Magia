@@ -14,15 +14,15 @@ private:
 public:
 	Lista_Medicamentos();
 	~Lista_Medicamentos();
-	void agregaInicial(T medicina);
+	void    agregaInicial(T medicina);
 	void    eliminaInicial();
 	void    eliminarPos(int pos);
-	void	coutLista();
-	int get_lon();
+
+	void    forEach(void (*callback)(T));
+
+	int     get_lon();
 	T       obtenerPos(int pos);
 };
-
-
 
 template <typename T>
 struct Lista_Medicamentos<T>::Nodo {
@@ -34,6 +34,18 @@ struct Lista_Medicamentos<T>::Nodo {
 
 	Nodo(T medicina = NULL, Nodo* sig = nullptr) : medicina(medicina), sig(sig) {}
 };
+
+//-----------------------------------
+template<class T>
+inline void Lista_Medicamentos<T>::forEach(void(*callback)(T))
+{
+	Nodo* aux = ini;
+	while (aux != nullptr) {
+		callback(aux->medicina);
+		aux = aux->sig;
+	}
+}
+//-------------------------------------
 
 
 template<class T>
@@ -49,8 +61,6 @@ template<class T>
 Lista_Medicamentos<T>::~Lista_Medicamentos()
 {
 }
-
-
 
 template <typename T>
 void Lista_Medicamentos<T>::agregaInicial(T medicina) {
@@ -72,33 +82,26 @@ void Lista_Medicamentos<T>::eliminaInicial() {
 	}
 }
 
-template<class T>
-inline void Lista_Medicamentos<T>::eliminarPos(int pos)
-{
-	if (pos >= 0 && pos < lon) {
-		Nodo* aux = ini;
-		Nodo* anterior = nullptr;
-		for (int i = 0; i < pos; i++) {
-			anterior = aux;
-			aux = aux->sig;
-		}
-		if (anterior != nullptr) {
-			anterior->sig = aux->sig;
-		}
-		else {
-			ini = aux->sig;
-		}
-		delete aux;
-		lon--;
-	}
-}
-
-
-template<class T>
-inline void Lista_Medicamentos<T>::coutLista()
-{
-
-}
+//template<class T>
+//inline void Lista_Medicamentos<T>::eliminarPos(int pos)
+//{
+//	if (pos >= 0 && pos < lon) {
+//		Nodo* aux = ini;
+//		Nodo* anterior = nullptr;
+//		for (int i = 0; i < pos; i++) {
+//			anterior = aux;
+//			aux = aux->sig;
+//		}
+//		if (anterior != nullptr) {
+//			anterior->sig = aux->sig;
+//		}
+//		else {
+//			ini = aux->sig;
+//		}
+//		delete aux;
+//		lon--;
+//	}
+//}
 
 template<class T>
 T Lista_Medicamentos<T>::obtenerPos(int pos) {
@@ -110,9 +113,9 @@ T Lista_Medicamentos<T>::obtenerPos(int pos) {
 		}
 		return aux->medicina;
 	}
-	else {
-		return NULL;
-	}
+	/*else {
+		return nullptr;
+	}*/
 }
 
 template<class T>
