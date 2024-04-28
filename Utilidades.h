@@ -29,10 +29,12 @@ inline T getYCenter(T lengthY) {
 inline short logica_menu(int pos_y_inicial, int cantidad_opciones, int x, int y) {
 	short opcion = 1;
 	string indicador = "=>";
+	gotoxy(x, pos_y_inicial); cout << indicador;
+
 	while (1) {
 		if (_kbhit()) {
 			char caracter = _getch();
-			if (caracter == 'w') {
+			if (caracter == 72 || caracter == 'w') {
 				gotoxy(x, y);
 				cout << "   ";
 				opcion--;
@@ -45,7 +47,7 @@ inline short logica_menu(int pos_y_inicial, int cantidad_opciones, int x, int y)
 				Console::ForegroundColor = ConsoleColor::Cyan;
 				cout << indicador;
 			}
-			if (caracter == 's') {
+			if (caracter == 80 || caracter == 's') {
 				gotoxy(x, y);
 				cout << "   ";
 				opcion++;

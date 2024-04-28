@@ -17,9 +17,12 @@ public:
 	void agregaInicial(T medicina);
 	void    eliminaInicial();
 	void    eliminarPos(int pos);
-	void coutLista();
+	void	coutLista();
+	int get_lon();
 	T       obtenerPos(int pos);
 };
+
+
 
 template <typename T>
 struct Lista_Medicamentos<T>::Nodo {
@@ -31,8 +34,6 @@ struct Lista_Medicamentos<T>::Nodo {
 
 	Nodo(T medicina = NULL, Nodo* sig = nullptr) : medicina(medicina), sig(sig) {}
 };
-
-
 
 
 template<class T>
@@ -96,6 +97,13 @@ inline void Lista_Medicamentos<T>::eliminarPos(int pos)
 template<class T>
 inline void Lista_Medicamentos<T>::coutLista()
 {
+
+}
+
+template<class T>
+inline int Lista_Medicamentos<T>::get_lon()
+{
+	return this->lon;
 }
 
 template<class T>
