@@ -95,7 +95,7 @@ Almacen<T>::~Almacen()
 template<class T>
 inline void Almacen<T>::mostrarPedidos()
 {
-	gotoxy(getXCenter(105), Console::WindowTop + 1);  cout << R"(    ____  __________  ________  ____  _____    ____  _______   ______  ___________   ___________________)";
+	gotoxy(getXCenter(105), Console::WindowTop + 1); cout << R"(    ____  __________  ________  ____  _____    ____  _______   ______  ___________   ___________________)";
 	gotoxy(getXCenter(105), Console::WindowTop + 2); cout << R"(   / __ \/ ____/ __ \/  _/ __ \/ __ \/ ___/   / __ \/ ____/ | / / __ \/  _/ ____/ | / /_  __/ ____/ ___/)";
 	gotoxy(getXCenter(105), Console::WindowTop + 3); cout << R"(  / /_/ / __/ / / / // // / / / / / /\__ \   / /_/ / __/ /  |/ / / / // // __/ /  |/ / / / / __/  \__ \)";
 	gotoxy(getXCenter(105), Console::WindowTop + 4); cout << R"( / ____/ /___/ /_/ // // /_/ / /_/ /___/ /  / ____/ /___/ /|  / /_/ // // /___/ /|  / / / / /___ ___/ /)";

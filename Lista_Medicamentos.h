@@ -120,3 +120,9 @@ T Lista_Medicamentos<T>::obtenerPos(int pos) {
 		return NULL;
 	}
 }
+
+template<class T>
+inline int Lista_Medicamentos<T>::getLon()
+{
+	return this->lon;
+}
