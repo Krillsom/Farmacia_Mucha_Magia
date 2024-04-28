@@ -19,7 +19,8 @@ public:
 	void mostrarBotones(bool pedirPedidoDesabilitado);
 	void agregarInicioLista(T obj);
 	void mostrarInventario();
-	void guardarInventario();
+	void guardarMedicamentosPersistente();
+
 	void Almacen_menu();
 
 	T getElementoLista(int n);
@@ -261,10 +262,31 @@ inline void Almacen<T>::mostrarInventario()
 {
 	Console::Clear();
 
+
+	gotoxy(getXCenter(53), Console::WindowTop + 1); cout << R"(    ____                      __             _)";
+	gotoxy(getXCenter(53), Console::WindowTop + 2); cout << R"(   /  _/___ _   _____  ____  / /_____ ______(_)___)"; 
+	gotoxy(getXCenter(53), Console::WindowTop + 3); cout << R"(   / // __ \ | / / _ \/ __ \/ __/ __ `/ ___/ / __ \)";
+	gotoxy(getXCenter(53), Console::WindowTop + 4); cout << R"( _/ // / / / |/ /  __/ / / / /_/ /_/ / /  / / /_/ /)";
+	gotoxy(getXCenter(53), Console::WindowTop + 5); cout << R"(/___/_/ /_/|___/\___/_/ /_/\__/\__,_/_/  /_/\____/)";                              
+
 	unalista.coutLista();
 
 	mostrarOpcion(new string("Volver al men" + string(1, 163)), getXCenter(18), true);
 
 	elegirOpcion(true);
+	
+}
 
+template <class T>
+inline void Almacen<T>::guardarMedicamentosPersistente() {
+	ofstream* archivo = new ofstream("Medicamentos.txt", ios::binary | ios::out);
+	archivo->open();
+
+	if (archivo->is_open()) {
+
+		
+
+	}
+
+	
 }
