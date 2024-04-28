@@ -70,7 +70,6 @@ inline void Almacen<T>::Almacen_menu()
 	if (opcion == 5) {
 		Console::Clear();
 	}
-
 }
 
 template<class T>
