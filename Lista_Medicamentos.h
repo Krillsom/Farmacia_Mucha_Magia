@@ -174,9 +174,9 @@ inline void Lista_Medicamentos<T>::coutLista()
 				}
 
 
-				string temp = nodo1->medicina;
-				nodo1->medicina = nodo2->medicina;
-				nodo2->medicina = temp;
+				T tempV = actual->medicina;
+				actual->medicina = minimo->medicina;
+				minimo->medicina = tempV;
 
 				actual = actual->sig;
 			}
