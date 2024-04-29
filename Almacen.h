@@ -94,7 +94,6 @@ inline void Almacen<T>::Almacen_menu()
 		mostrarPedidos();
 	}
 	if (opcion == 2) {
-		//almacen_menu();    //mostrar el menu de almacen
 		Console::Clear();
 		registrarPedido();
 		Almacen_menu();
@@ -142,8 +141,10 @@ inline void Almacen<T>::mostrarPedidos()
 		short* pos = new short(0);
 
 		proveedor->forEach([pos](T t, bool esInicio) mutable {
-			t.mostrar(9, esInicio, ++ * pos);
+			t.mostrar(9, esInicio, ++* pos);
 		});
+
+		delete pos;
 	}
 	mostrarBotones(!proveedor->size());
 
@@ -167,12 +168,6 @@ inline void Almacen<T>::registrarPedido()
 
 	proveedor->agregarPedido(temp_Name, temp_cantidad);
 }
-
-
-
-//------------------
-//cosas de provedor
-//------------------
 
 template<class T>
 inline void Almacen<T>::elegirOpcion(bool pedirPedidoDesabilitado, function<void()>* adicional)
@@ -301,7 +296,7 @@ inline void Almacen<T>::guardarMedicamentoPersistente(T nodo) {
 	strcpy(envio, nodo.getNombre().c_str());
 
 	Medicamento<const char*, int, float>::MedicamentoStruct medicamentoStruct(envio,
-		int(nodo.getCantidad()), float(nodo.getPrecio()));
+		int(nodo.getCantidad()), nodo.getPrecio());
 
 
 	if (archivoEscritor->is_open()) {
@@ -326,6 +321,7 @@ inline void Almacen<T>::obtenerMedicamentosInventario() {
 
 			unalista.agregaInicial(medicamentoGuardado);
 		}
+
 	}
 
 }

@@ -21,6 +21,7 @@ public:
 Tienda::Tienda()
 {
 	objAlmacen = new Almacen<Medicamento<string, int, float>>();
+	objAlmacen->obtenerMedicamentosInventario();
 	objCaja = new Caja<Medicamento<string, int, float>>(objAlmacen->getUnaLista());
 }
 
@@ -31,7 +32,6 @@ Tienda::~Tienda()
 
 inline void Tienda::menu()
 {
-	Console::SetWindowSize(130, 45);
 	Console::Clear();
 	string indicador = "<=";
 	gotoxy(3, 3); cout <<  R"(    ______                                _                   __  ___           __             __  ___            _      )";
