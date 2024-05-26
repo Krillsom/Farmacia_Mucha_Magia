@@ -7,6 +7,7 @@ using namespace std;
 int main() {
     srand(time(nullptr));
 
+    
     Tienda* objTienda = new Tienda();
 
     objTienda->menu();

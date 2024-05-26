@@ -20,7 +20,33 @@ public:
 	void forEach(function<void(T)> callback);
 	T       obtenerPos(int pos);
 	void actualizarArchivo();
+	void agregarPos(T medicina, int pos);
+	void agregaFinal(T elem);
+
+	void ordenarNombre();
+	void ordenarCantidad();
+	void ordenarPrecio();
+
+	class Iterator {
+		unsigned int pos;
+		Nodo* aux;
+	public:
+		Iterator(unsigned int pos, Nodo* aux) : pos(pos), aux(aux) {}
+		void operator++() { pos++; aux = aux->sig; }
+		bool operator!=(Iterator x) { return pos != x.pos; }
+		T operator*() { return aux->elem; }
+	};
+
+	Iterator begin() {
+		return Iterator(0, ini);
+	}
+
+	Iterator end() {
+		return Iterator(lon, nullptr);
+	}
+
 };
+
 
 template <typename T>
 struct Lista_Medicamentos<T>::Nodo {
@@ -233,6 +259,53 @@ inline void Lista_Medicamentos<T>::actualizarArchivo()
 	delete archivo;
 
 }
+
+template<class T>
+inline void Lista_Medicamentos<T>::agregarPos(T medicina, int pos)
+{
+	if (pos > lon) return;
+	if (pos == 0) {
+		agregaInicial(medicina);
+	}
+	else {
+		Nodo* aux = ini;
+		for (int i = 1; i < pos; i++) {
+			aux = aux->sig;
+		}
+		Nodo* nuevo = new Nodo(medicina, aux->sig);
+		if (nuevo != nullptr) {
+			aux->sig = nuevo;
+			lon++;
+		}
+	}
+}
+
+template<class T>
+inline void Lista_Medicamentos<T>::agregaFinal(T elem)
+{
+	int pos = longitud();
+	agregaPos(elem, pos);
+}
+
+
+
+template<class T>
+inline void Lista_Medicamentos<T>::ordenarNombre()
+{
+}
+
+template<class T>
+inline void Lista_Medicamentos<T>::ordenarCantidad()
+{
+	mergesort(T,T,T, [](){magiaaaaaaaa})
+}
+
+template<class T>
+inline void Lista_Medicamentos<T>::ordenarPrecio()
+{
+}
+
+
 
 template<class T>
 inline int Lista_Medicamentos<T>::get_lon()

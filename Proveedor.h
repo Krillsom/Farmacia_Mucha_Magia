@@ -15,7 +15,6 @@ public:
 
 	void agregarPedido(string nombre, int cantidad);
 	T recibirPedido();
-	void guardarPedidos();
 	float generarPrecio(int cantidad);
 
 };

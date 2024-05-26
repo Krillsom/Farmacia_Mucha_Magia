@@ -25,6 +25,7 @@ public:
 	void guardarMedicamentoPersistente(T obj);
 	void obtenerMedicamentosInventario();
 
+	void ordenamiento_menu();
 	void Almacen_menu();
 
 	T getElementoLista(int n);
@@ -84,10 +85,11 @@ inline void Almacen<T>::Almacen_menu()
 	gotoxy(50, 10); cout << R"(Lista de Pedidos Pendientes)";
 	gotoxy(50, 12); cout << R"(Realizar Pedidos)";
 	gotoxy(50, 14); cout << R"(Inventario)";
-	gotoxy(50, 16); cout << R"(Volver al Menu)";
+	gotoxy(50, 16); cout << R"(Ordenar)";
+	gotoxy(50, 18); cout << R"(Volver al Menu)";
 
 
-	short opcion = logica_menu(10, 4, 45, 10);
+	short opcion = logica_menu(10, 5, 45, 10);
 
 	if (opcion == 1) {
 		Console::Clear();
@@ -100,12 +102,73 @@ inline void Almacen<T>::Almacen_menu()
 	}
 	if (opcion == 3) {
 		mostrarInventario();
-
 		Console::Clear();
 	}
 
+	if (opcion == ) {
+		
+		Console::Clear();
+	}
+
+	if (opcion == 5) {
+		Console::Clear();
+	}
+}
+
+template<class T>
+inline void Almacen<T>::ordenamiento_menu() {
+	Console::Clear();
+	string indicador = "<=";
+	gotoxy(getXCenter(44), 3); cout << R"(   ____           __                           _            __      )";
+	gotoxy(getXCenter(44), 4); cout << R"(  / __ \_________/ /__  ____  ____ _____ ___  (_)__  ____  / /_____ )";
+	gotoxy(getXCenter(44), 5); cout << R"( / / / / ___/ __  / _ \/ __ \/ __ `/ __ `__ \/ / _ \/ __ \/ __/ __ \)";
+	gotoxy(getXCenter(44), 6); cout << R"(/ /_/ / /  / /_/ /  __/ / / / /_/ / / / / / / /  __/ / / / /_/ /_/ /)";
+	gotoxy(getXCenter(44), 7); cout << R"(\____/_/   \__,_/\___/_/ /_/\__,_/_/ /_/ /_/_/\___/_/ /_/\__/\____/ )";
+	gotoxy(getXCenter(44), 8); cout << R"(--------------------------------------------------------------------)";
+
+	gotoxy(50, 10); cout << R"(Ordenar por Nombre (A->Z))";
+	gotoxy(50, 12); cout << R"(Ordenar por Nombre (Z->A))";
+	gotoxy(50, 14); cout << R"(Ordenar por Cantidad (Mayor->Menor))";
+	gotoxy(50, 16); cout << R"(Ordenar por Cantidad (Menor->Mayor))";
+	gotoxy(50, 18); cout << R"(Ordenar por Precio (Mayor->Menor))";
+	gotoxy(50, 20); cout << R"(Ordenar por Precio (Menor->Mayor))";
+	gotoxy(50, 22); cout << R"(Volver al Menu)";
+
+	short opcion = logica_menu(10, 7, 45, 10);
+
+	if (opcion == 1) {
+		Console::Clear();
+		unalista.ordenarNombre();
+		mostrarInventario();
+	}
+	if (opcion == 2) {
+		Console::Clear();
+		unalista.ordenarCantidad();
+		mostrarInventario();
+	}
+	if (opcion == 3) {
+		Console::Clear();
+		unalista.ordenarPrecio();
+		mostrarInventario();
+	}
 	if (opcion == 4) {
 		Console::Clear();
+		Almacen_menu();
+	}
+
+	if (opcion == 5) {
+		Console::Clear();
+		Almacen_menu();
+	}
+
+	if (opcion == 6) {
+		Console::Clear();
+		Almacen_menu();
+	}
+
+	if (opcion == 7) {
+		Console::Clear();
+		Almacen_menu();
 	}
 }
 
