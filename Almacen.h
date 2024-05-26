@@ -105,8 +105,8 @@ inline void Almacen<T>::Almacen_menu()
 		Console::Clear();
 	}
 
-	if (opcion == ) {
-		
+	if (opcion == 4 ) {
+		ordenamiento_menu();
 		Console::Clear();
 	}
 
