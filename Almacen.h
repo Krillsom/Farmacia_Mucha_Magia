@@ -119,12 +119,12 @@ template<class T>
 inline void Almacen<T>::ordenamiento_menu() {
 	Console::Clear();
 	string indicador = "<=";
-	gotoxy(getXCenter(44), 3); cout << R"(   ____           __                           _            __      )";
-	gotoxy(getXCenter(44), 4); cout << R"(  / __ \_________/ /__  ____  ____ _____ ___  (_)__  ____  / /_____ )";
-	gotoxy(getXCenter(44), 5); cout << R"( / / / / ___/ __  / _ \/ __ \/ __ `/ __ `__ \/ / _ \/ __ \/ __/ __ \)";
-	gotoxy(getXCenter(44), 6); cout << R"(/ /_/ / /  / /_/ /  __/ / / / /_/ / / / / / / /  __/ / / / /_/ /_/ /)";
-	gotoxy(getXCenter(44), 7); cout << R"(\____/_/   \__,_/\___/_/ /_/\__,_/_/ /_/ /_/_/\___/_/ /_/\__/\____/ )";
-	gotoxy(getXCenter(44), 8); cout << R"(--------------------------------------------------------------------)";
+	gotoxy(getXCenter(69), 3); cout << R"(   ____           __                           _            __      )";
+	gotoxy(getXCenter(69), 4); cout << R"(  / __ \_________/ /__  ____  ____ _____ ___  (_)__  ____  / /_____ )";
+	gotoxy(getXCenter(69), 5); cout << R"( / / / / ___/ __  / _ \/ __ \/ __ `/ __ `__ \/ / _ \/ __ \/ __/ __ \)";
+	gotoxy(getXCenter(69), 6); cout << R"(/ /_/ / /  / /_/ /  __/ / / / /_/ / / / / / / /  __/ / / / /_/ /_/ /)";
+	gotoxy(getXCenter(69), 7); cout << R"(\____/_/   \__,_/\___/_/ /_/\__,_/_/ /_/ /_/_/\___/_/ /_/\__/\____/ )";
+	gotoxy(getXCenter(69), 8); cout << R"(--------------------------------------------------------------------)";
 
 	gotoxy(50, 10); cout << R"(Ordenar por Nombre (A->Z))";
 	gotoxy(50, 12); cout << R"(Ordenar por Nombre (Z->A))";
@@ -136,34 +136,38 @@ inline void Almacen<T>::ordenamiento_menu() {
 
 	short opcion = logica_menu(10, 7, 45, 10);
 
+	
 	if (opcion == 1) {
 		Console::Clear();
-		unalista.ordenarNombre();
+		unalista.ordenarNombre(CriterioDeOrdenamiento::Descendente);
 		mostrarInventario();
 	}
 	if (opcion == 2) {
 		Console::Clear();
-		unalista.ordenarCantidad();
+		unalista.ordenarNombre(CriterioDeOrdenamiento::Ascendente);
 		mostrarInventario();
 	}
 	if (opcion == 3) {
 		Console::Clear();
-		unalista.ordenarPrecio();
+		unalista.ordenarCantidad(CriterioDeOrdenamiento::Descendente);
 		mostrarInventario();
 	}
 	if (opcion == 4) {
 		Console::Clear();
-		Almacen_menu();
+		unalista.ordenarCantidad(CriterioDeOrdenamiento::Ascendente);
+		mostrarInventario();
 	}
 
 	if (opcion == 5) {
 		Console::Clear();
-		Almacen_menu();
+		unalista.ordenarPrecio(CriterioDeOrdenamiento::Descendente);
+		mostrarInventario();
 	}
 
 	if (opcion == 6) {
 		Console::Clear();
-		Almacen_menu();
+		unalista.ordenarPrecio(CriterioDeOrdenamiento::Ascendente);
+		mostrarInventario();
 	}
 
 	if (opcion == 7) {
@@ -225,7 +229,7 @@ inline void Almacen<T>::registrarPedido()
 	int temp_cantidad = 0;
 
 	gotoxy(getXCenter(35), getYCenter(5)); cout << "Ingrese el nombre de la medicina: ";
-	cin.ignore(); getline(cin, temp_Name);
+	cin.ignore(); getline(cin >> ws, temp_Name);
 	gotoxy(getXCenter(30), getYCenter(5) + 2);  cout << "Ingrese la cantidad a pedir: ";
 	cin >> temp_cantidad;
 

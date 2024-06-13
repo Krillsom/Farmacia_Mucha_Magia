@@ -1,5 +1,11 @@
 #pragma once
 #include "Medicamento.h"
+#include "Merge.h"
+
+enum CriterioDeOrdenamiento {
+	Ascendente,
+	Descendente
+};
 
 template<class T>
 class Lista_Medicamentos
@@ -21,11 +27,13 @@ public:
 	T       obtenerPos(int pos);
 	void actualizarArchivo();
 	void agregarPos(T medicina, int pos);
+	void agregaPos(T elem, int pos);
 	void agregaFinal(T elem);
 
-	void ordenarNombre();
-	void ordenarCantidad();
-	void ordenarPrecio();
+	void ordenarNombre(CriterioDeOrdenamiento co);
+	void ordenarCantidad(CriterioDeOrdenamiento co);
+	void ordenarPrecio(CriterioDeOrdenamiento co);
+	void borrarTodo();
 
 	class Iterator {
 		unsigned int pos;
@@ -34,7 +42,7 @@ public:
 		Iterator(unsigned int pos, Nodo* aux) : pos(pos), aux(aux) {}
 		void operator++() { pos++; aux = aux->sig; }
 		bool operator!=(Iterator x) { return pos != x.pos; }
-		T operator*() { return aux->elem; }
+		T operator*() { return aux->medicina; }
 	};
 
 	Iterator begin() {
@@ -130,96 +138,13 @@ inline void Lista_Medicamentos<T>::coutLista()
 
 	Nodo* auxAux = auxLista->ini;
 
-	if (ini != nullptr && ini->sig != nullptr) {
-		int n = rand() % 3;
-
-		switch (n)
-		{
-		case 0: {
-			Nodo* temp1;
-			Nodo* temp2;
-			bool intercambiado;
-
-			do {
-				intercambiado = false;
-				temp1 = auxLista->ini;
-				temp2 = temp1->sig;
-
-				while (temp2 != nullptr) {
-					if (temp1->medicina.getNombre() > temp2->medicina.getNombre()) {
-						// Intercambiar los datos de los nodos
-						T temp = temp1->medicina;
-						temp1->medicina = temp2->medicina;
-						temp2->medicina = temp;
-						intercambiado = true;
-					}
-
-					temp1 = temp1->sig;
-					temp2 = temp2->sig;
-				}
-			} while (intercambiado);
-			break;
-		}
-		case 1:
-		{
-			Nodo* listaOrdenada = nullptr; // Inicializamos una lista vacía
-			Nodo* actual = auxLista->ini;
-
-			while (actual != nullptr) {
-				Nodo* sig = actual->sig;
-				if (listaOrdenada == nullptr || actual->medicina.getNombre() < listaOrdenada->medicina.getNombre()) {
-					actual->sig = listaOrdenada;
-					listaOrdenada = actual;
-				}
-				else {
-					Nodo* temp = listaOrdenada;
-					while (temp->sig != nullptr && actual->medicina.getNombre() < temp->medicina.getNombre()) {
-						temp = temp->sig;
-					}
-					actual->sig = temp->sig;
-					temp->sig = actual;
-				}
-				actual = sig;
-			}
-
-			auxLista->ini = listaOrdenada;
-			break;
-		}
-		case 2: {
-			Nodo* actual = auxAux;
-
-			while (actual != nullptr) {
-				Nodo* minimo = auxAux;
-				Nodo* temp = auxAux->sig;
-
-				while (temp != nullptr) {
-					if (temp->medicina.getNombre() < minimo->medicina.getNombre()) {
-						minimo = temp;
-					}
-					temp = temp->sig;
-				}
-
-
-				T tempV = actual->medicina;
-				actual->medicina = minimo->medicina;
-				minimo->medicina = tempV;
-
-				actual = actual->sig;
-			}
-		}
-		default:
-			break;
-		}
-
-	}
-
-
 	while (auxAux != nullptr) {
 		auxAux->medicina.mostrar(9, ConsoleColor::Yellow, ++pos);
 		auxAux = auxAux->sig;
 	}
 
 	delete auxLista;
+	delete auxAux;
 }
 
 template<class T>
@@ -280,29 +205,72 @@ inline void Lista_Medicamentos<T>::agregarPos(T medicina, int pos)
 	}
 }
 
+template <typename T>
+void Lista_Medicamentos<T>::agregaPos(T elem, int pos) {
+	if (pos > lon) return;
+	if (pos == 0) {
+		agregaInicial(elem);
+	}
+	else {
+		Nodo* aux = ini;
+		for (int i = 1; i < pos; i++) {
+			aux = aux->sig;
+		}
+		Nodo* nuevo = new Nodo(elem, aux->sig);
+		if (nuevo != nullptr) {
+			aux->sig = nuevo;
+			lon++;
+		}
+	}
+}
+
 template<class T>
 inline void Lista_Medicamentos<T>::agregaFinal(T elem)
 {
-	int pos = longitud();
+	int pos = get_lon();
 	agregaPos(elem, pos);
 }
 
 
 
 template<class T>
-inline void Lista_Medicamentos<T>::ordenarNombre()
+inline void Lista_Medicamentos<T>::ordenarNombre(CriterioDeOrdenamiento co)
 {
+	mergeSort<Lista_Medicamentos<T>, T>(this, [co](T a, T b) {
+		if (co == Ascendente) return a.getNombre() < b.getNombre();
+		return a.getNombre() > b.getNombre();
+		});
 }
 
 template<class T>
-inline void Lista_Medicamentos<T>::ordenarCantidad()
+inline void Lista_Medicamentos<T>::ordenarCantidad(CriterioDeOrdenamiento co)
 {
-	mergesort(T,T,T, [](){magiaaaaaaaa})
+	mergeSort<Lista_Medicamentos<T>, T>(this, [co](T a, T b) {
+		if (co == Ascendente) return a.getCantidad() > b.getCantidad();
+		return a.getCantidad() < b.getCantidad();
+		});
+	
 }
 
 template<class T>
-inline void Lista_Medicamentos<T>::ordenarPrecio()
+inline void Lista_Medicamentos<T>::ordenarPrecio(CriterioDeOrdenamiento co)
 {
+	mergeSort<Lista_Medicamentos<T>, T>(this, [co] (T a,T b) {
+		if(co == Ascendente) return a.getPrecio() > b.getPrecio();
+		return a.getPrecio() < b.getPrecio();
+	});
+}
+
+template<class T>
+inline void Lista_Medicamentos<T>::borrarTodo()
+{
+	Nodo* aux = ini;
+	while (ini != nullptr) {
+		aux = ini;
+		ini = ini->sig;
+		delete aux;
+	}
+	lon = 0; // Restablecemos la longitud de la lista a cero
 }
 
 
