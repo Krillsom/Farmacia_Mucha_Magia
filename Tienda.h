@@ -10,6 +10,7 @@ class Tienda
 private:
 	Almacen<Medicamento<string, int, float>>* objAlmacen;
 	Caja<Medicamento<string, int, float>>* objCaja;
+
 	
 
 public:
@@ -58,7 +59,7 @@ inline void Tienda::menu()
 
 	gotoxy(x, y_inicial); cout << indicador;
 
-	opcion = logica_menu(y_inicial, 4, x, y);
+	opcion = logica_menu(y_inicial, 4, x, y_inicial);
 
 	if (opcion == 1) {
 		//Caja_menu();   //mostrar el menu de caja

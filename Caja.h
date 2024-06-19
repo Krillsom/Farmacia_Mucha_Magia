@@ -3,6 +3,7 @@
 #include "Lista_Medicamentos.h"
 #include "Pila.h"
 #include "Medicamento.h"
+#include "Arbol.h"
 
 template <class T>
 class Caja
@@ -15,15 +16,24 @@ public:
 	void mostrarHistorialVentas();
 	void menu_caja();
 	void actualizar_lista(Lista_Medicamentos<T> unalista);
+	void toArbol();
+	void mostrarTop3Vendidos();
 
 private:
 	Lista_Medicamentos<T> unalista;
 	Pila<T> historialVentas;
+	Arbol<T>* arbol;
 };
 
 template <class T>
 Caja<T>::Caja(Lista_Medicamentos<T> unalista) {
 	this->unalista = unalista;
+
+	int pos = 0;
+
+	this->arbol = new Arbol<T>([&pos](T medicamento) {
+		medicamento.mostrar(7, ConsoleColor::Cyan, ++pos);
+		});
 }
 
 template <class T>
@@ -35,6 +45,42 @@ template<class T>
 inline void Caja<T>::actualizar_lista(Lista_Medicamentos<T> unalista)
 {
 	this->unalista = unalista;
+}
+
+template<class T>
+inline void Caja<T>::toArbol()
+{
+	unalista.forEach([this](T medicamento) {
+		arbol->insertar(medicamento);
+		});
+}
+
+template<class T>
+inline void Caja<T>::mostrarTop3Vendidos()
+{
+	toArbol();
+	gotoxy(getXCenter(84), Console::WindowTop + 1); cout << R"(  __________  ____     _____             _    __               ___     __          )";
+	gotoxy(getXCenter(84), Console::WindowTop + 2); cout << R"( /_  __/ __ \/ __ \   |__  /            | |  / /__  ____  ____/ (_)___/ /___  _____)";
+	gotoxy(getXCenter(84), Console::WindowTop + 3); cout << R"(  / / / / / / /_/ /    /_ <   ______    | | / / _ \/ __ \/ __  / / __  / __ \/ ___/)";
+	gotoxy(getXCenter(84), Console::WindowTop + 4); cout << R"( / / / /_/ / ____/   ___/ /  /_____/    | |/ /  __/ / / / /_/ / / /_/ / /_/ (__  ) )";
+	gotoxy(getXCenter(84), Console::WindowTop + 5); cout << R"(/_/  \____/_/       /____/              |___/\___/_/ /_/\__,_/_/\__,_/\____/____/  )";
+	gotoxy(getXCenter(84), Console::WindowTop + 6); cout << R"(                                                                                   )";
+
+
+	for (short i = 0; i < 3; i++) {
+
+		if (!arbol->esVacio()) {
+			T med = arbol->Maximo();
+			med.mostrarVenta(Console::WindowTop + 10, ConsoleColor::Magenta, i);
+			arbol->Eliminar(med);
+		}
+
+	}
+
+	arbol->raiz = nullptr;
+	cout << "\n\t";
+
+	system("pause");
 }
 
 template<class T>
@@ -82,10 +128,18 @@ void Caja<T>::registrarVenta() {
 		//Logica de la venta...
 
 		cout << "Venta realizada: " << cantidadVenta << " unidades de " << nombreMedicamento << endl;
+		int cantidad = int(venta.getCantidad() - cantidadVenta);
+
+		unalista.eliminarPos(indexMedicamento);
+
+		venta.setVecesVendido(venta.getVecesVendido() + cantidadVenta);
+		venta.setCantidad(cantidad);
+
 		historialVentas.push(venta);
 
+		unalista.agregarPos(venta, indexMedicamento);
 		//Actualizar la cantidad de medicamentos en el inventario
-		unalista.eliminarPos(indexMedicamento);
+		// unalista.eliminarPos(indexMedicamento);
 		unalista.actualizarArchivo();
 	}
 	else {
@@ -129,9 +183,10 @@ inline void Caja<T>::menu_caja()
 
 	gotoxy(55, 9);  cout << R"(Venta)";
 	gotoxy(55, 11); cout << R"(Historial)";
-	gotoxy(55, 13); cout << R"(Volver al Menu)";
+	gotoxy(55, 13); cout << R"(TOP 3. Vendidos)";
+	gotoxy(55, 15); cout << R"(Volver al Menu)";
 
-	short opcion = logica_menu(9, 3, 45, 9);
+	short opcion = logica_menu(9, 4, 45, 9);
 
 	if (opcion == 1) {
 		Console::Clear();
@@ -144,6 +199,11 @@ inline void Caja<T>::menu_caja()
 		menu_caja();
 	}
 	if (opcion == 3) {
+		Console::Clear();
+		mostrarTop3Vendidos();
+		menu_caja();
+	}
+	if (opcion == 4) {
 		Console::Clear();
 	}
 }

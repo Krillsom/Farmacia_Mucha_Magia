@@ -166,11 +166,15 @@ inline void Lista_Medicamentos<T>::actualizarArchivo()
 
 	forEach([&archivo](T medicina) {
 		char envio[50]{};
+		char categoria[17]{};
 
 		strcpy(envio, medicina.getNombre().c_str());
+		strcpy(categoria, medicina.getCategoria().c_str());
 
 		Medicamento<const char*, int, float>::MedicamentoStruct medicamentoStruct(envio,
-			int(medicina.getCantidad()), float(medicina.getPrecio()));
+			int(medicina.getCantidad()), float(medicina.getPrecio()), 
+			categoria,
+			int(medicina.getVecesVendido()));
 
 
 		if (archivo->is_open()) {
@@ -249,16 +253,16 @@ inline void Lista_Medicamentos<T>::ordenarCantidad(CriterioDeOrdenamiento co)
 		if (co == Ascendente) return a.getCantidad() > b.getCantidad();
 		return a.getCantidad() < b.getCantidad();
 		});
-	
+
 }
 
 template<class T>
 inline void Lista_Medicamentos<T>::ordenarPrecio(CriterioDeOrdenamiento co)
 {
-	mergeSort<Lista_Medicamentos<T>, T>(this, [co] (T a,T b) {
-		if(co == Ascendente) return a.getPrecio() > b.getPrecio();
+	mergeSort<Lista_Medicamentos<T>, T>(this, [co](T a, T b) {
+		if (co == Ascendente) return a.getPrecio() > b.getPrecio();
 		return a.getPrecio() < b.getPrecio();
-	});
+		});
 }
 
 template<class T>

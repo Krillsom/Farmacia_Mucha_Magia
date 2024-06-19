@@ -34,29 +34,24 @@ public:
 			Cambio de lugar
 		*/
 		for (auto& it : whichList) {
-			if (it.getKey() == x.getKey()) {
-				whichList = listas[min(int(listas.size() - 1), max(0, hash - (rand() % 4 + 1)))];
+			if (myhash(it.getKey()) == myhash(x.getKey())) {
+				hash += rand() % listas.size() - hash;
+				hash = max(0, min(hash, (int)listas.size() - 1));
 
-				if (max(0, hash - (rand() % 4 + 1)) <= 0) {
-					whichList = listas[min(int(listas.size() - 1), hash + (rand() % 4 + 1))];
-				}
 				break;
 			}
 		}
 
-		whichList.push_back(x); //Agregamos el nuevo elemento a la lista
+		listas[hash].push_back(x); //Agregamos el nuevo elemento a la lista
 
 		return true;
 	}
 
-	void DispAll() {
+
+	void DispAll(function<void(list<Entidad<Key, Value>>)> cb) {
 		int pos = 0;
 		for (auto& thisList : listas) {
-			cout << "Key: " + to_string(pos) << " -> ";
-			for (auto& it : listas[pos]) {
-				cout << it.getKey() << (pos + 1 < thisList.size() ? "," : "");
-			}
-			cout << endl;
+			cb(listas[pos]);
 			pos++;
 		}
 	}
@@ -64,7 +59,11 @@ public:
 private:
 
 	int myhash(Key key) const {
-		int hash = key * 1 / 8;
+		int hash = 0;
+
+		for (int i = 0; i < key.length(); i++) {
+			hash += short(key[i]);
+		}
 
 		hash %= listas.size();
 		return(hash);

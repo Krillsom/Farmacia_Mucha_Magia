@@ -1,6 +1,7 @@
 #pragma once
 #include "Proveedor.h"
 #include "Lista_Medicamentos.h"
+#include "HashTabla.h"
 
 template <class T>
 class Almacen
@@ -10,6 +11,7 @@ private:
 	Lista_Medicamentos<T> unalista;
 	ofstream* archivoEscritor;
 	ifstream* archivoLector;
+	HashTabla<string, T>* hashTabla;
 
 public:
 	Almacen();
@@ -24,10 +26,11 @@ public:
 	void abrirArchivo();
 	void guardarMedicamentoPersistente(T obj);
 	void obtenerMedicamentosInventario();
-
+	void mostrarPorCategorias();
 	void ordenamiento_menu();
 	void Almacen_menu();
 
+	void toHashTable();
 	T getElementoLista(int n);
 
 	void mostrarOpcion(string* message, int x, bool seleccionado = false, bool desactivado = false);
@@ -42,6 +45,7 @@ Almacen<T>::Almacen()
 	this->proveedor = new Proveedor<T>;
 	this->archivoEscritor = new ofstream();
 	this->archivoLector = new ifstream();
+	this->hashTabla = new HashTabla<string, T>(300);
 	abrirArchivo();
 }
 
@@ -56,6 +60,9 @@ template <class T>
 Almacen<T>::~Almacen()
 {
 	delete proveedor;
+	delete archivoEscritor;
+	delete archivoLector;
+	delete hashTabla;
 }
 
 template<class T>
@@ -85,11 +92,12 @@ inline void Almacen<T>::Almacen_menu()
 	gotoxy(50, 10); cout << R"(Lista de Pedidos Pendientes)";
 	gotoxy(50, 12); cout << R"(Realizar Pedidos)";
 	gotoxy(50, 14); cout << R"(Inventario)";
-	gotoxy(50, 16); cout << R"(Ordenar)";
-	gotoxy(50, 18); cout << R"(Volver al Menu)";
+	gotoxy(50, 16); cout << R"(Inventario por categorias)";
+	gotoxy(50, 18); cout << R"(Ordenar)";
+	gotoxy(50, 20); cout << R"(Volver al Menu)";
 
 
-	short opcion = logica_menu(10, 5, 45, 10);
+	short opcion = logica_menu(10, 6, 45, 10);
 
 	if (opcion == 1) {
 		Console::Clear();
@@ -105,12 +113,18 @@ inline void Almacen<T>::Almacen_menu()
 		Console::Clear();
 	}
 
-	if (opcion == 4 ) {
-		ordenamiento_menu();
+	if (opcion == 4) {
+
+		mostrarPorCategorias();
 		Console::Clear();
 	}
 
 	if (opcion == 5) {
+		ordenamiento_menu();
+		Console::Clear();
+	}
+
+	if (opcion == 6) {
 		Console::Clear();
 	}
 }
@@ -136,7 +150,7 @@ inline void Almacen<T>::ordenamiento_menu() {
 
 	short opcion = logica_menu(10, 7, 45, 10);
 
-	
+
 	if (opcion == 1) {
 		Console::Clear();
 		unalista.ordenarNombre(CriterioDeOrdenamiento::Descendente);
@@ -183,6 +197,29 @@ inline T Almacen<T>::getElementoLista(int n)
 	return unalista.obtenerPos(n);
 }
 
+template<class T>
+inline void Almacen<T>::mostrarPorCategorias()
+{
+	Console::Clear();
+	toHashTable();
+
+	hashTabla->DispAll([](list<Entidad<string, T>> entidad) {
+		for (auto it = entidad.begin(); it != entidad.end(); it++) {
+			cout << it->getKey() << "\n";
+		}
+	});
+
+	system("pause");
+}
+
+template<class T>
+inline void Almacen<T>::toHashTable()
+{
+	unalista.forEach([this](T t) {
+		hashTabla->insert(Entidad<string, T>(t.getCategoria(), t));
+	}); 
+}
+
 
 template<class T>
 inline void Almacen<T>::mostrarPedidos()
@@ -208,17 +245,17 @@ inline void Almacen<T>::mostrarPedidos()
 		short* pos = new short(0);
 
 		proveedor->forEach([pos](T t, bool esInicio) mutable {
-			t.mostrar(9, esInicio, ++* pos);
-		});
+			t.mostrar(9, esInicio, ++ * pos);
+			});
 
 		delete pos;
 	}
 	mostrarBotones(!proveedor->size());
 
-	elegirOpcion(!proveedor->size(), new function<void ()>([this]() {
+	elegirOpcion(!proveedor->size(), new function<void()>([this]() {
 		archivoEscritor->close();
 		archivoEscritor->open("Medicamentos.dat", ios::binary | ios::app);
-	}));
+		}));
 }
 
 template<class T>
@@ -229,7 +266,7 @@ inline void Almacen<T>::registrarPedido()
 	int temp_cantidad = 0;
 
 	gotoxy(getXCenter(35), getYCenter(5)); cout << "Ingrese el nombre de la medicina: ";
-	cin.ignore(); getline(cin >> ws, temp_Name);
+	getline(cin >> ws, temp_Name);
 	gotoxy(getXCenter(30), getYCenter(5) + 2);  cout << "Ingrese la cantidad a pedir: ";
 	cin >> temp_cantidad;
 
@@ -274,7 +311,7 @@ inline void Almacen<T>::elegirOpcion(bool pedirPedidoDesabilitado, function<void
 	if (opcion == 0) {
 		// Volver al menu
 		Console::Clear();
-		if(adicional != nullptr) (*adicional)();
+		if (adicional != nullptr) (*adicional)();
 		Almacen_menu();
 	}
 	else if (opcion == 1) {
@@ -359,11 +396,13 @@ template <class T>
 inline void Almacen<T>::guardarMedicamentoPersistente(T nodo) {
 
 	char envio[50];
+	char categoria[17];
 
 	strcpy(envio, nodo.getNombre().c_str());
+	strcpy(categoria, nodo.getCategoria().c_str());
 
 	Medicamento<const char*, int, float>::MedicamentoStruct medicamentoStruct(envio,
-		int(nodo.getCantidad()), nodo.getPrecio());
+		int(nodo.getCantidad()), nodo.getPrecio(), categoria, nodo.getVecesVendido());
 
 
 	if (archivoEscritor->is_open()) {
@@ -376,15 +415,16 @@ inline void Almacen<T>::guardarMedicamentoPersistente(T nodo) {
 template <class T>
 inline void Almacen<T>::obtenerMedicamentosInventario() {
 
-	Medicamento<string, int, float>::MedicamentoStruct medicamento("", 0, 0.0);
+	Medicamento<string, int, float>::MedicamentoStruct medicamento("", 0, 0.0, "");
 
 
 	if (archivoLector->is_open()) {
 
-		while (archivoLector->read((char* )&medicamento, sizeof(Medicamento<string, int, float>::MedicamentoStruct))) {
+		while (archivoLector->read((char*)&medicamento, sizeof(Medicamento<string, int, float>::MedicamentoStruct))) {
 			// Procesar la estructura leída
 			// Aquí puedes hacer lo que necesites con la estructura leída desde el archivo
-			Medicamento<string, int, float> medicamentoGuardado(medicamento.nombre, medicamento.cantidad, medicamento.precio);
+			Medicamento<string, int, float> medicamentoGuardado(medicamento.nombre, medicamento.cantidad, medicamento.precio,
+				medicamento.categoria, medicamento.vecesVendido);
 
 			unalista.agregaInicial(medicamentoGuardado);
 		}

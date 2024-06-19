@@ -40,11 +40,42 @@ inline void mostrar_creditos() {
 }
 
 
+string* categorias = new string[25]{
+				"Analgésicos",
+				"Antibióticos",
+				"Antifúngicos",
+				"Antivirales",
+				"Antipiréticos",
+				"Antiinflamatorios",
+				"Antihistamínicos",
+				"Antidepresivos",
+				"Antipsicóticos",
+				"Antiepilépticos",
+				"Ansiolíticos",
+				"Broncodilatadores",
+				"Cardiovasculares",
+				"Diuréticos",
+				"Hipoglucemiantes",
+				"Anticoagulantes",
+				"Antihipertensivos",
+				"Laxantes",
+				"Antieméticos",
+				"Esteroides",
+				"Inmunosupresores",
+				"Antidiarreicos",
+				"Antiespasmódicos",
+				"Hormonas",
+				"Sedantes"
+};
+
+
 
 inline short logica_menu(int pos_y_inicial, int cantidad_opciones, int x, int y) {
 	short opcion = 1;
 	string indicador = "=>";
+	Console::ForegroundColor = ConsoleColor::Cyan;
 	gotoxy(x, pos_y_inicial); cout << indicador;
+	Console::ForegroundColor = ConsoleColor::White;
 
 	while (1) {
 		if (_kbhit()) {
