@@ -271,10 +271,6 @@ inline T Almacen<T>::getElementoLista(int n)
 	return unalista.obtenerPos(n);
 }
 
-/*
-
-	KEVIN NO TE OLVIDES, ESTA AQUI, REVISA DOS VECES, YA POR FAVOR, SE QUE ESTAS CANSADO, SE QUE YA HICISTE 9 EJERCICIOS, PERO
-*/
 template<class T>
 inline void Almacen<T>::mostrarPorCategorias()
 {
