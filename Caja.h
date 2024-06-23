@@ -4,6 +4,7 @@
 #include "Pila.h"
 #include "Medicamento.h"
 #include "Arbol.h"
+#include "Cupon_Generator.h"
 
 template <class T>
 class Caja
@@ -18,15 +19,23 @@ public:
 	void actualizar_lista(Lista_Medicamentos<T> unalista);
 	void toArbol();
 	void mostrarTop3Vendidos();
+	void mostrarCuponesDisponibles();
+	void buscarMedicamento();
 
 private:
 	Lista_Medicamentos<T> unalista;
 	Pila<T> historialVentas;
 	Arbol<T>* arbol;
+	CuponGenerator* cuponGenerator;
+	T vacio;
+	float ganancias;
+
 };
 
 template <class T>
 Caja<T>::Caja(Lista_Medicamentos<T> unalista) {
+
+	this->cuponGenerator = new CuponGenerator;
 	this->unalista = unalista;
 
 	int pos = 0;
@@ -39,6 +48,8 @@ Caja<T>::Caja(Lista_Medicamentos<T> unalista) {
 template <class T>
 Caja<T>::~Caja()
 {
+	delete cuponGenerator;
+	delete arbol;
 }
 
 template<class T>
@@ -84,6 +95,36 @@ inline void Caja<T>::mostrarTop3Vendidos()
 }
 
 template<class T>
+inline void Caja<T>::mostrarCuponesDisponibles()
+{
+	this->cuponGenerator->mostrarCupones();
+
+	system("pause");
+}
+
+template<class T>
+inline void Caja<T>::buscarMedicamento()
+{
+	gotoxy(getXCenter(49), Console::WindowTop + 1); cout << R"(    ____)";
+	gotoxy(getXCenter(49), Console::WindowTop + 2); cout << R"(   / __ )__  ________________ _____/ /___  _____)";
+	gotoxy(getXCenter(49), Console::WindowTop + 3); cout << R"(  / __  / / / / ___/ ___/ __ `/ __  / __ \/ ___/)";
+	gotoxy(getXCenter(49), Console::WindowTop + 4); cout << R"( / /_/ / /_/ (__  ) /__/ /_/ / /_/ / /_/ / /)";
+	gotoxy(getXCenter(49), Console::WindowTop + 5); cout << R"(/_____/\__,_/____/\___/\__,_/\__,_/\____/_/  )";
+
+	string nombreMedicamento = "";
+
+	gotoxy(getXCenter(26), 7);
+	cout << "Nombre de medicamento a buscar: ";
+
+	getline(cin >> ws, nombreMedicamento);
+
+	bool medicamentoEnInventario = false;
+
+
+}
+
+
+template<class T>
 void Caja<T>::registrarVenta() {
 
 	gotoxy(getXCenter(86), Console::WindowTop + 1); cout << R"(    ____  _______________________________  ___    ____     _    _________   ___________ )";
@@ -126,6 +167,24 @@ void Caja<T>::registrarVenta() {
 	}
 	else	if (cantidadDisponible >= cantidadVenta) {
 		//Logica de la venta...
+
+		string cuponCode = "";
+
+		cout << "Cup" << char(162) << "n para descuento: ";
+		getline(cin >> ws, cuponCode);
+
+		if (cuponCode.length() > 0) {
+			float descuento = cuponGenerator->getDescuentoByCodigo(cuponCode);
+
+			if (descuento == 0.0) {
+				cout << "Cup" << char(162) << "n inv" << char(160) << "lido" << endl;
+			}
+			else {
+				cout << "Descuento aplicado: " << descuento << "%" << endl;
+				float nuevoPrecio = venta.getPrecio() - (venta.getPrecio() * descuento / 100);
+				venta.setPrecio(nuevoPrecio);
+			}
+		}
 
 		cout << "Venta realizada: " << cantidadVenta << " unidades de " << nombreMedicamento << endl;
 		int cantidad = int(venta.getCantidad() - cantidadVenta);
@@ -184,9 +243,10 @@ inline void Caja<T>::menu_caja()
 	gotoxy(55, 9);  cout << R"(Venta)";
 	gotoxy(55, 11); cout << R"(Historial)";
 	gotoxy(55, 13); cout << R"(TOP 3. Vendidos)";
-	gotoxy(55, 15); cout << R"(Volver al Menu)";
+	gotoxy(55, 15); cout << R"(Cupones disponibles)";
+	gotoxy(55, 17); cout << R"(Volver al Menu)";
 
-	short opcion = logica_menu(9, 4, 45, 9);
+	short opcion = logica_menu(9, 5, 45, 9);
 
 	if (opcion == 1) {
 		Console::Clear();
@@ -204,6 +264,11 @@ inline void Caja<T>::menu_caja()
 		menu_caja();
 	}
 	if (opcion == 4) {
+		Console::Clear();
+		mostrarCuponesDisponibles();
+		menu_caja();
+	}
+	if (opcion == 5) {
 		Console::Clear();
 	}
 }

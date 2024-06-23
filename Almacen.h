@@ -2,6 +2,7 @@
 #include "Proveedor.h"
 #include "Lista_Medicamentos.h"
 #include "HashTabla.h"
+#include "Grafo.h"
 
 template <class T>
 class Almacen
@@ -12,6 +13,7 @@ private:
 	ofstream* archivoEscritor;
 	ifstream* archivoLector;
 	HashTabla<string, T>* hashTabla;
+	Grafo<string>* grafos;
 
 public:
 	Almacen();
@@ -29,6 +31,11 @@ public:
 	void mostrarPorCategorias();
 	void ordenamiento_menu();
 	void Almacen_menu();
+	void toGrafo();
+	void rutaMasRapidaByMedicamento(T medicamento);
+	void borrarRutaMasRapidaByMedicamento(T medicamento);
+	void mostrarRutasDisponibles();
+	void elegirMedicamentoLive();
 
 	void toHashTable();
 	T getElementoLista(int n);
@@ -42,6 +49,7 @@ public:
 template <class T>
 Almacen<T>::Almacen()
 {
+	this->grafos = new Grafo<string>;
 	this->proveedor = new Proveedor<T>;
 	this->archivoEscritor = new ofstream();
 	this->archivoLector = new ifstream();
@@ -62,6 +70,7 @@ Almacen<T>::~Almacen()
 	delete proveedor;
 	delete archivoEscritor;
 	delete archivoLector;
+	delete grafos;
 	delete hashTabla;
 }
 
@@ -75,13 +84,75 @@ inline void Almacen<T>::agregarInicioLista(T obj) {
 	unalista.agregaInicial(obj);
 }
 
+template<class T>
+inline void Almacen<T>::mostrarRutasDisponibles() {
+	toGrafo();
+
+	gotoxy(getXCenter(34), Console::WindowTop + 1);
+	cout << R"(    ____  __  ___________   _____)";
+	gotoxy(getXCenter(34), Console::WindowTop + 2);
+	cout << R"(   / __ \/ / / /_  __/   | / ___/)";
+	gotoxy(getXCenter(34), Console::WindowTop + 3);
+	cout << R"(  / /_/ / / / / / / / /| | \__ \ )";
+	gotoxy(getXCenter(34), Console::WindowTop + 4);
+	cout << R"( / _, _/ /_/ / / / / ___ |___/ / )";
+	gotoxy(getXCenter(34), Console::WindowTop + 5);
+	cout << R"(/_/ |_|\____/ /_/ /_/  |_/____/ )";
+
+
+	unalista.forEach([this](T medicamento, int pos) {
+		medicamento.mostrar(6, getYCenter((unalista.get_lon() - 1) * 3), pos == 0 ? ConsoleColor::Magenta : ConsoleColor::DarkGray, pos);
+		if (pos == 0) {
+			rutaMasRapidaByMedicamento(medicamento);
+		}
+		});
+
+	elegirMedicamentoLive();
+
+	/*unalista.forEach([this](T medicamento, int pos) {
+		rutaMasRapidaByMedicamento(medicamento);
+	});*/
+
+
+
+	mostrarOpcion(new string("Dale ESC para salir"), getXCenter(18), false);
+}
+
+template<class T>
+inline void Almacen<T>::toGrafo()
+{
+	grafos->adicionarVertice("Almacen");
+
+	for (short i = 0; i < 10; i++) {
+		grafos->adicionarVertice("Sucursal " + string(1, i + 65));
+	}
+
+	for (short i = 0; i < 11; i++) {
+		for (int j = 1; j < 11; j++) {
+			if (i != j) {
+				if (j < i) {
+					grafos->adicionarArco(i, j, grafos->obtenerArco(j, i - 2));
+				}
+				else {
+					grafos->adicionarArco(i, j, rand() % 41 + 10);
+				}
+			}
+		}
+	}
+
+	unalista.forEach([this](T medicamento, int pos) {
+		medicamento.setSucursalIdx(rand() % 10 + 1);
+		});
+
+}
+
 //----------------------
 template<class T>
 inline void Almacen<T>::Almacen_menu()
 {
 
 	Console::Clear();
-	string indicador = "<=";
+	string indicador = "=>";
 	gotoxy(getXCenter(44), 3); cout << R"(    ___    __                              )";
 	gotoxy(getXCenter(44), 4); cout << R"(   /   |  / /___ ___  ____ _________  ____ )";
 	gotoxy(getXCenter(44), 5); cout << R"(  / /| | / / __ `__ \/ __ `/ ___/ _ \/ __ \)";
@@ -94,10 +165,11 @@ inline void Almacen<T>::Almacen_menu()
 	gotoxy(50, 14); cout << R"(Inventario)";
 	gotoxy(50, 16); cout << R"(Inventario por categorias)";
 	gotoxy(50, 18); cout << R"(Ordenar)";
-	gotoxy(50, 20); cout << R"(Volver al Menu)";
+	gotoxy(50, 20); cout << R"(Ruta de pedidos)";
+	gotoxy(50, 22); cout << R"(Volver al Menu)";
 
 
-	short opcion = logica_menu(10, 6, 45, 10);
+	short opcion = logica_menu(10, 7, 45, 10);
 
 	if (opcion == 1) {
 		Console::Clear();
@@ -114,7 +186,6 @@ inline void Almacen<T>::Almacen_menu()
 	}
 
 	if (opcion == 4) {
-
 		mostrarPorCategorias();
 		Console::Clear();
 	}
@@ -125,6 +196,11 @@ inline void Almacen<T>::Almacen_menu()
 	}
 
 	if (opcion == 6) {
+		Console::Clear();
+		mostrarRutasDisponibles();
+	}
+
+	if (opcion == 7) {
 		Console::Clear();
 	}
 }
@@ -197,6 +273,92 @@ inline T Almacen<T>::getElementoLista(int n)
 	return unalista.obtenerPos(n);
 }
 
+/*
+
+	KEVIN NO TE OLVIDES, ESTA AQUI, REVISA DOS VECES, YA POR FAVOR, SE QUE ESTAS CANSADO, SE QUE YA HICISTE 9 EJERCICIOS, PERO
+	TE NECESITAMOS, LOS NIÑOS NECESITAN UN HEROE
+	GAAAAAAAAAAAAAA
+	REVISTA ESTA FUNCION
+	POR FAVOR
+	NO TE OLVIDES
+	GAAAAAAAGAAAAAAAGAAAAAAAGAAAAAAAGAAAAAAAGAAAAAAA
+	GAAAAAAAGAAAAAAAGAAAAAAAGAAAAAAAGAAAAAAA
+	GAAAAAAAGAAAAAAAGAAAAAAAGAAAAAAAGAAAAAAA
+	GAAAAAAAGAAAAAAAGAAAAAAAGAAAAAAAGAAAAAAAGAAAAAA
+	
+	___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ / 
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /  
+/_/  |_\___\_\____/___/  /_____//____//_/ /_/  |_|  /_/ |_/_____/  |___/___/_/ |_/_/ |_/_/ |_/  
+	___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+/_/  |_\___\_\____/___/  /_____//____//_/ /_/  |_|  /_/ |_/_____/  |___/___/_/ |_/_/ |_/_/ |_/
+    ___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ / 
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /  
+/_/  |_\___\_\____/___/  /_____//____//_/ /_/  |_|  /_/ |_/_____/  |___/___/_/ |_/_/ |_/_/ |_/   
+	___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+/_/  |_\___\_\____/___/  /_____//____//_/ /_/  |_|  /_/ |_/_____/  |___/___/_/ |_/_/ |_/_/ |_/
+	___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+/_/  |_\___\_\____/___/  /_____//____//_/ /_/  |_|  /_/ |_/_____/  |___/___/_/ |_/_/ |_/_/ |_/
+	___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+/_/  |_\___\_\____/___/  /_____//____//_/ /_/  |_|  /_/ |_/_____/  |___/___/_/ |_/_/ |_/_/ |_/
+	___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+/_/  |_\___\_\____/___/  /_____//____//_/ /_/  |_|  /_/ |_/_____/  |___/___/_/ |_/_/ |_/_/ |_/
+	___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+/_/  |_\___\_\____/___/  /_____//____//_/ /_/  |_|  /_/ |_/_____/  |___/___/_/ |_/_/ |_/_/ |_/
+	___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+/_/  |_\___\_\____/___/  /_____//____//_/ /_/  |_|  /_/ |_/_____/  |___/___/_/ |_/_/ |_/_/ |_/
+	___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+/_/  |_\___\_\____/___/  /_____//____//_/ /_/  |_|  /_/ |_/_____/  |___/___/_/ |_/_/ |_/_/ |_/
+	___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+/_/  |_\___\_\____/___/  /_____//____//_/ /_/  |_|  /_/ |_/_____/  |___/___/_/ |_/_/ |_/_/ |_/
+	___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+	 ___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+	 ___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+	 ___   ____  __  ______   ____________________       __ __ _______    _______   ___   ___   __
+   /   | / __ \/ / / /  _/  / ____/ ___/_  __/   |     / //_// ____/ |  / /  _/ | / / | / / | / /
+  / /| |/ / / / / / // /   / __/  \__ \ / / / /| |    / ,<  / __/  | | / // //  |/ /  |/ /  |/ /
+ / ___ / /_/ / /_/ // /   / /___ ___/ // / / ___ |   / /| |/ /___  | |/ // // /|  / /|  / /|  /
+/_/  |_\___\_\____/___/  /_____//____//_/ /_/  |_|  /_/ |_/_____/  |___/___/_/ |_/_/ |_/_/ |_/
+	AQUÍ ESTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA*/
 template<class T>
 inline void Almacen<T>::mostrarPorCategorias()
 {
@@ -207,9 +369,11 @@ inline void Almacen<T>::mostrarPorCategorias()
 		for (auto it = entidad.begin(); it != entidad.end(); it++) {
 			cout << it->getKey() << "\n";
 		}
-	});
+		});
 
-	system("pause");
+	mostrarOpcion(new string("Volver al men" + string(1, 163)), getXCenter(18), true);
+
+	elegirOpcion(true);
 }
 
 template<class T>
@@ -217,7 +381,7 @@ inline void Almacen<T>::toHashTable()
 {
 	unalista.forEach([this](T t) {
 		hashTabla->insert(Entidad<string, T>(t.getCategoria(), t));
-	}); 
+		});
 }
 
 
@@ -402,7 +566,7 @@ inline void Almacen<T>::guardarMedicamentoPersistente(T nodo) {
 	strcpy(categoria, nodo.getCategoria().c_str());
 
 	Medicamento<const char*, int, float>::MedicamentoStruct medicamentoStruct(envio,
-		int(nodo.getCantidad()), nodo.getPrecio(), categoria, nodo.getVecesVendido());
+		int(nodo.getCantidad()), nodo.getPrecio(), categoria, nodo.getSucursalIdx(), nodo.getVecesVendido());
 
 
 	if (archivoEscritor->is_open()) {
@@ -424,11 +588,85 @@ inline void Almacen<T>::obtenerMedicamentosInventario() {
 			// Procesar la estructura leída
 			// Aquí puedes hacer lo que necesites con la estructura leída desde el archivo
 			Medicamento<string, int, float> medicamentoGuardado(medicamento.nombre, medicamento.cantidad, medicamento.precio,
-				medicamento.categoria, medicamento.vecesVendido);
+				medicamento.categoria, medicamento.vecesVendido, medicamento.sucursalIdx);
 
 			unalista.agregaInicial(medicamentoGuardado);
 		}
 
 	}
 
+}
+
+template <class T>
+inline void Almacen<T>::rutaMasRapidaByMedicamento(T medicamento)
+{
+	vector<int>* camino = grafos->dijkstra(0, medicamento.getSucursalIdx());
+
+	if (camino != nullptr) {
+		short baseX = (Console::WindowWidth / 6 - 11 / 2) + Console::WindowWidth * 2 / 3;
+		short baseY = getYCenter(camino->size() * 2 - 1);
+
+		for (short i = camino->size() - 1; i >= 0; i--) {
+			string v = grafos->obtenerVertice(camino->at(i));
+			gotoxy(short(baseX + (v == "Almacen" ? 1 : 0)), short(baseY + i * 2)); cout << v;
+			if (i <= 0) {
+				gotoxy(short(baseX + 11 / 2), short(baseY + i * 2 + 1)); cout << char(25);
+			}
+		}
+	}
+}
+
+template <class T>
+inline void Almacen<T>::borrarRutaMasRapidaByMedicamento(T medicamento)
+{
+	vector<int>* camino = grafos->dijkstra(0, medicamento.getSucursalIdx());
+
+	if (camino != nullptr) {
+		short baseX = (Console::WindowWidth / 6 - 11 / 2) + Console::WindowWidth * 2 / 3;
+		short baseY = getYCenter(camino->size() * 2 - 1);
+
+		for (short i = camino->size() - 1; i >= 0; i--) {
+			string v = grafos->obtenerVertice(camino->at(i));
+			gotoxy(short(baseX + (v == "Almacen" ? 1 : 0)), short(baseY + i * 2)); cout << "               ";
+			if (i <= 0) {
+				gotoxy(short(baseX + 11 / 2), short(baseY + i * 2 + 1)); cout << "  ";
+			}
+		}
+	}
+}
+
+template <class T>
+inline void Almacen<T>::elegirMedicamentoLive()
+{
+	short actualMedicamento = 0;
+
+	while (1) {
+		if (_kbhit()) {
+			char tecla = _getch();
+
+			if (tecla == 72 || tecla == 'w' || tecla == 80 || tecla == 's') {
+				borrarRutaMasRapidaByMedicamento(unalista.obtenerPos(actualMedicamento));
+				unalista.obtenerPos(actualMedicamento).mostrar(6, getYCenter((unalista.get_lon() - 1) * 3), ConsoleColor::DarkGray, actualMedicamento);
+			}
+
+			if (tecla == 72 || tecla == 'w') {
+				actualMedicamento = (actualMedicamento - 1) + (actualMedicamento - 1 < 0) * (unalista.get_lon());
+			}
+
+			if (tecla == 80 || tecla == 's') {
+				actualMedicamento = (actualMedicamento + 1) % unalista.get_lon();
+			}
+
+			if (tecla == 72 || tecla == 'w' || tecla == 80 || tecla == 's') {
+				unalista.obtenerPos(actualMedicamento).mostrar(6, getYCenter((unalista.get_lon() - 1) * 3), ConsoleColor::Magenta, actualMedicamento);
+				rutaMasRapidaByMedicamento(unalista.obtenerPos(actualMedicamento));
+			}
+
+			if (tecla == 27) {
+				break;
+			}
+		}
+	}
+
+	Almacen_menu();
 }

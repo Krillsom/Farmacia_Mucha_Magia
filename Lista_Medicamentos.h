@@ -24,6 +24,7 @@ public:
 	void	coutLista();
 	int get_lon();
 	void forEach(function<void(T)> callback);
+	void forEach(function<void(T, int)> callback);
 	T       obtenerPos(int pos);
 	void actualizarArchivo();
 	void agregarPos(T medicina, int pos);
@@ -291,6 +292,17 @@ inline void Lista_Medicamentos<T>::forEach(function<void(T)> callback)
 	Nodo* aux = ini;
 	while (aux != nullptr) {
 		callback(aux->medicina);
+		aux = aux->sig;
+	}
+}
+
+template<class T>
+inline void Lista_Medicamentos<T>::forEach(function<void(T, int)> callback)
+{
+	int pos = 0;
+	Nodo* aux = ini;
+	while (aux != nullptr) {
+		callback(aux->medicina, pos++);
 		aux = aux->sig;
 	}
 }

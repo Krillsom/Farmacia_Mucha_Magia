@@ -11,8 +11,6 @@ private:
 	Almacen<Medicamento<string, int, float>>* objAlmacen;
 	Caja<Medicamento<string, int, float>>* objCaja;
 
-	
-
 public:
 	Tienda();
 	~Tienda();
@@ -28,6 +26,8 @@ Tienda::Tienda()
 
 Tienda::~Tienda()
 {
+	delete objAlmacen;
+	delete objCaja;
 }
 
 

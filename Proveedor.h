@@ -40,6 +40,7 @@ inline void Proveedor<T>::agregarPedido(string nombre, int cantidad)
 }
 
 
+
 template<class T>
 inline T Proveedor<T>::recibirPedido()
 {	
